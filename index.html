@@ -376,6 +376,9 @@
   .pickcard label{font-size:12.5px;font-weight:700;color:#e9e2ff;display:block;margin-bottom:7px;}
   .pickcard select{width:100%;background-color:#2b1f55;border:1px solid #8f7fd0;color:#fff;border-radius:12px;padding:10px 12px;font-size:14.5px;min-height:46px;font-family:inherit;}
   .pickcard select option{color:#17131f;background-color:#fff;}
+  .wiz-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:#c9bce8;letter-spacing:.02em;margin-bottom:8px;}
+  .wiz-bar{height:5px;border-radius:3px;background-color:#2b1f55;overflow:hidden;margin-bottom:16px;}
+  .wiz-bar i{display:block;height:100%;background:var(--grad);border-radius:3px;}
   @media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important;} }
 </style>
 </head>
@@ -455,7 +458,7 @@
 
       <button class="cta" id="findBtn" type="button">Find My Matches&nbsp;&nbsp;→</button>
 
-      <button class="agent-cta" id="agentCta" type="button"><span class="ac-mark" aria-hidden="true">✦</span><span><b>Let Motiv do the legwork</b><small>Our AI agent builds your deal packet — trade-in, budget, the works — and, with your OK, emails the dealer and works the deal. Optional, free, no account.</small></span><span class="ac-arrow" aria-hidden="true">→</span></button>
+      <button class="agent-cta" id="agentCta" type="button"><span class="ac-mark" aria-hidden="true">✦</span><span><b>Let Motiv do the legwork</b><small>Give Motiv your terms and trade-in — it emails the dealer and works the deal.</small></span><span class="ac-arrow" aria-hidden="true">→</span></button>
     </div>
   </section>
 
@@ -1924,7 +1927,7 @@ function dealStatusChip(){
   if(d.status==='replied' && d.reply) extra = ' · ' + new Date(d.reply.at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
   return '<div style="margin:0 0 10px;"><span style="display:inline-block;background:' + m[1] + ';color:' + m[2] + ';font-size:12px;font-weight:800;border-radius:999px;padding:5px 11px;">' + m[0] + esc(extra) + '</span>' + (followupDue() ? '<span style="display:inline-block;background:#fdf3e0;color:#7a5b08;font-size:12px;font-weight:800;border-radius:999px;padding:5px 11px;margin-left:6px;">Follow-up ready</span>' : '') + '</div>';
 }
-function wirePacketCard(){ var b=$('pktResume'); if(b) b.addEventListener('click', function(){ $('chatLog').innerHTML=''; if(packet.deal && packet.deal.status && packet.deal.status!=='draft'){ botSay('Here&rsquo;s where your deal stands.'); renderDealScreen(); } else { botSay('Welcome back — here&rsquo;s the packet you started.'); agentStep=5; renderPacketReview(); } go('agent'); }); }
+function wirePacketCard(){ var b=$('pktResume'); if(b) b.addEventListener('click', function(){ $('chatLog').innerHTML=''; if(packet.deal && packet.deal.status && packet.deal.status!=='draft'){ botSay('Here&rsquo;s where your deal stands.'); renderDealScreen(); } else { botSay('Welcome back — your packet so far.'); renderPacketReview(); } go('agent'); }); }
 function packetCardHTML(){
   var c = packetCar(); if(!c) return '';
   var sent = packet.deal && packet.deal.status && packet.deal.status!=='draft';
@@ -2137,98 +2140,108 @@ function carOptionsHTML(includePlaceholder){
   Object.keys(map).forEach(function(id){ if(savedSet[id]) return; var x = map[id]; h += '<option value="' + esc(id) + '"' + (id===packet.carId ? ' selected' : '') + '>' + esc(x.name + ' ' + x.trim) + ' — ' + money(x.price) + '</option>'; });
   return h;
 }
-function renderCarPicker(){
-  var d = document.createElement('div'); d.className = 'pickcard';
-  d.innerHTML = '<label for="carPickerSel">Pick a car</label><select id="carPickerSel">' + carOptionsHTML(true) + '</select>' +
-    '<div class="abtns"><button class="skipbtn" id="pickLater" type="button">Pick later</button><button class="btn-grad" id="pickGo" type="button">Use this car</button></div>';
-  $('chatLog').appendChild(d);
-  d.querySelector('#pickGo').addEventListener('click', function(){
-    var v = d.querySelector('#carPickerSel').value;
-    if(!v){ toast('Pick a car first — or tap Pick later'); return; }
-    packet.carId = v; agentPickedCar = true; persistPacket();
-    d.remove();
-    var c = packetCar(); botSay('Starting with the car you picked:'); if(c) carBubble(c);
-    scrollChat();
-  });
-  d.querySelector('#pickLater').addEventListener('click', function(){ d.remove(); botSay('No problem — you can pick the car at the car step below, or tap AI Agent on any car in Saved.'); scrollChat(); });
-}
 function startAgent(car){
   if(car){ packet.carId = car.id; agentPickedCar = true; }
   else { packet.carId = null; agentPickedCar = false; }
+  saidOnce = {};
   $('chatLog').innerHTML='';
-  botSay('Hi — I&rsquo;m your Motiv agent. I&rsquo;ll get your background, build a clean deal packet for the dealership, and — <b>only if you tick the consent box at the end</b> — email the dealer myself and track their reply here. Every step is skippable except your name and email, and I never invent numbers: your trade is worth whatever the dealer appraises it at.');
-  var c = packetCar();
-  if(c && agentPickedCar){ botSay('Starting with the car you picked:'); carBubble(c); }
-  else { botSay('You haven&rsquo;t picked a car yet — pick the one you want me to work on, or pick later at the car step.'); renderCarPicker(); }
-  agentStep = (packet.contact.name && validEmail(packet.contact.email)) ? 1 : 0; renderStep(); go('agent');
+  botSay('I&rsquo;ll work this deal for you.');
+  agentStep = 0; renderStep(); go('agent');
 }
+
 $('agentCta').addEventListener('click', function(){ startAgent(null); });
 $('agentBack').addEventListener('click', function(){ persistPacket(); go('saved'); });
 
-function stepBtns(nextLabel){
-  return '<div class="abtns"><button class="skipbtn" data-skip type="button">Skip</button><button class="btn-grad" data-next type="button">' + nextLabel + '</button></div>';
+/* ---- Wizard chrome: one step at a time, Step X of 5, Back / Next ---- */
+var WIZ_TITLES = ['Pick a car','About you','Deal terms','Trade-in','Review'];
+var agentReturn = false;
+function wizHead(n, title){
+  return '<div class="wiz-meta"><span>Step ' + (n+1) + ' of 5</span><span>' + WIZ_TITLES[n] + '</span></div><div class="wiz-bar"><i style="width:' + ((n+1)*20) + '%"></i></div><h4>' + title + '</h4>';
 }
-function wireStep(collect, nextLabel){
+function wizNav(nextLabel, opts){
+  opts = opts || {};
+  var h = '<div class="abtns">';
+  if(opts.back) h += '<button class="btn-ghost" data-back type="button" style="flex:none;padding-left:18px;padding-right:18px;">&#8592; Back</button>';
+  if(opts.skipLabel) h += '<button class="skipbtn" data-skip type="button">' + opts.skipLabel + '</button>';
+  h += '<button class="btn-grad" data-next type="button" style="flex:1;">' + nextLabel + '</button></div>';
+  return h;
+}
+function goNext(){
+  if(agentReturn){ agentReturn = false; renderPacketReview(); }
+  else { agentStep++; renderStep(); }
+}
+function goBack(){
+  if(agentReturn){ agentReturn = false; renderPacketReview(); return; }
+  agentStep = Math.max(0, agentStep - 1); renderStep();
+}
+function wireStep(collect){
   var box = $('stepBox');
-  var nx = box.querySelector('[data-next]'), sk = box.querySelector('[data-skip]');
-  function adv(skipped){ collect(skipped); persistPacket(); agentStep++; renderStep(); }
+  var nx = box.querySelector('[data-next]'), sk = box.querySelector('[data-skip]'), bk = box.querySelector('[data-back]');
+  function adv(skipped){ collect(skipped); persistPacket(); goNext(); }
   if(nx) nx.addEventListener('click', function(){ adv(false); });
   if(sk) sk.addEventListener('click', function(){ adv(true); });
+  if(bk) bk.addEventListener('click', function(){ collect(true); persistPacket(); goBack(); });
   scrollChat();
 }
 function renderStep(){
-  var box = $('stepBox'); var c = packetCar();
+  var box = $('stepBox');
   if(agentStep===0){
-    botSayOnce('q0','First, who&rsquo;s buying? The dealer needs a name to write the deal up, and <b>your email is where their reply lands</b> — the agent asks them to reply straight to you. Phone is optional.');
-    box.innerHTML = '<div class="astep"><h4>About you</h4>' +
-      '<label>Full name *</label><input id="byName" autocomplete="name" placeholder="e.g. Jordan Smith" value="' + esc(packet.contact.name) + '">' +
-      '<label>Email — the dealer replies here *</label><input id="byEmail" type="email" autocomplete="email" placeholder="you@example.com" value="' + esc(packet.contact.email) + '">' +
-      '<label>Phone (optional)</label><input id="byPhone" type="tel" autocomplete="tel" placeholder="Only if you want the dealer to call you" value="' + esc(packet.contact.phone) + '">' +
-      '<div class="formerr" id="byErr" style="display:none;"></div>' +
-      '<div class="abtns"><button class="btn-grad" data-next type="button" style="flex:1;">Next →</button></div></div>';
+    var c = packetCar();
+    box.innerHTML = '<div class="astep">' + wizHead(0,'Pick a car') +
+      '<label>Car</label><select id="carPick">' + carOptionsHTML(!packet.carId) + '</select>' +
+      (c ? '<div class="summarybox"><b>' + esc(c.name) + ' — ' + esc(c.trim) + '</b><br>' + money(c.price) + ' · ' + esc(c.dealer.name) + '</div>' : '') +
+      wizNav('Next →', { skipLabel:'Pick later' }) + '</div>';
     box.querySelector('[data-next]').addEventListener('click', function(){
-      var nm = $('byName').value.trim(), em = $('byEmail').value.trim(), err = $('byErr');
-      if(!nm || !validEmail(em)){ err.style.display = 'block'; err.textContent = !nm ? 'Your name is required — the dealer needs to know who the deal is for.' : 'A valid email is required — that is where the dealer’s reply goes.'; scrollChat(); return; }
-      packet.contact.name = nm; packet.contact.email = em; packet.contact.phone = $('byPhone').value.trim();
-      persistPacket(); meSay(nm + ' · ' + em + (packet.contact.phone ? ' · ' + packet.contact.phone : ''));
-      agentStep = 1; renderStep();
+      var v = $('carPick').value;
+      if(v){ packet.carId = v; agentPickedCar = true; }
+      if(!packet.carId){ toast('Pick a car — or tap Pick later'); return; }
+      persistPacket(); goNext();
     });
+    box.querySelector('[data-skip]').addEventListener('click', function(){ persistPacket(); goNext(); });
     scrollChat();
   }
   else if(agentStep===1){
-    botSayOnce('q1','Now the deal itself — <b>lease</b> or <b>finance</b>? Monthly target, down payment, term, and a walk-away out-the-door ceiling if you have one. Ballpark is fine, skip what you don&rsquo;t know.');
-    box.innerHTML = '<div class="astep"><h4>How do you want to buy?</h4>' +
+    box.innerHTML = '<div class="astep">' + wizHead(1,'About you') +
+      '<label>Name *</label><input id="byName" autocomplete="name" placeholder="Your name" value="' + esc(packet.contact.name) + '">' +
+      '<label>Email *</label><input id="byEmail" type="email" autocomplete="email" placeholder="you@example.com" value="' + esc(packet.contact.email) + '">' +
+      '<label>Phone (optional)</label><input id="byPhone" type="tel" autocomplete="tel" placeholder="Optional" value="' + esc(packet.contact.phone) + '">' +
+      '<div class="formerr" id="byErr" style="display:none;"></div>' +
+      wizNav('Next →', { back:true }) + '</div>';
+    box.querySelector('[data-next]').addEventListener('click', function(){
+      var nm = $('byName').value.trim(), em = $('byEmail').value.trim(), err = $('byErr');
+      if(!nm || !validEmail(em)){ err.style.display = 'block'; err.textContent = 'Name and a valid email are required.'; scrollChat(); return; }
+      packet.contact.name = nm; packet.contact.email = em; packet.contact.phone = $('byPhone').value.trim();
+      persistPacket(); goNext();
+    });
+    box.querySelector('[data-back]').addEventListener('click', function(){
+      packet.contact.name = $('byName').value.trim(); packet.contact.email = $('byEmail').value.trim(); packet.contact.phone = $('byPhone').value.trim();
+      persistPacket(); goBack();
+    });
+    scrollChat();
+  }
+  else if(agentStep===2){
+    box.innerHTML = '<div class="astep">' + wizHead(2,'Deal terms') +
       '<div class="achips" id="stChips"><button type="button" class="achip" data-v="Lease" aria-pressed="' + (packet.structure==='Lease') + '">Lease</button><button type="button" class="achip" data-v="Finance" aria-pressed="' + (packet.structure==='Finance') + '">Finance</button><button type="button" class="achip" data-v="Cash" aria-pressed="' + (packet.structure==='Cash') + '">Cash</button></div>' +
-      '<div class="arow" style="margin-top:12px;"><div><label>Monthly target ($)</label><input id="stMonthly" inputmode="numeric" placeholder="e.g. 800" value="' + esc(packet.monthly) + '"></div><div><label>Down payment ($)</label><input id="stDown" inputmode="numeric" placeholder="e.g. 5000" value="' + esc(packet.down) + '"></div></div>' +
-      '<div class="arow" style="margin-top:2px;"><div><label>Term (months)</label><input id="stTerm" inputmode="numeric" placeholder="e.g. 36 lease / 60 finance" value="' + esc(packet.term) + '"></div><div><label>Max out-the-door $ (finance)</label><input id="stMaxOtd" inputmode="numeric" placeholder="Walk-away ceiling" value="' + esc(packet.maxOtd) + '"></div></div>' +
-      stepBtns('Next →') + '</div>';
+      '<div class="arow" style="margin-top:12px;"><div><label>Monthly ($)</label><input id="stMonthly" inputmode="numeric" placeholder="e.g. 800" value="' + esc(packet.monthly) + '"></div><div><label>Down ($)</label><input id="stDown" inputmode="numeric" placeholder="e.g. 5000" value="' + esc(packet.down) + '"></div></div>' +
+      '<div class="arow" style="margin-top:2px;"><div><label>Term (months)</label><input id="stTerm" inputmode="numeric" placeholder="e.g. 36 / 60" value="' + esc(packet.term) + '"></div><div><label>Max out-the-door ($)</label><input id="stMaxOtd" inputmode="numeric" placeholder="Optional" value="' + esc(packet.maxOtd) + '"></div></div>' +
+      wizNav('Next →', { back:true }) + '</div>';
     box.querySelectorAll('#stChips .achip').forEach(function(ch){ ch.addEventListener('click', function(){ box.querySelectorAll('#stChips .achip').forEach(function(x){x.setAttribute('aria-pressed','false');}); ch.setAttribute('aria-pressed','true'); }); });
     wireStep(function(){
       var sel = box.querySelector('#stChips .achip[aria-pressed="true"]');
       packet.structure = sel ? sel.getAttribute('data-v') : packet.structure;
       packet.monthly = $('stMonthly').value.trim(); packet.down = $('stDown').value.trim(); packet.term = $('stTerm').value.trim(); packet.maxOtd = $('stMaxOtd').value.trim();
-      meSay([packet.structure, packet.monthly?('$'+packet.monthly+'/mo target'):null, packet.down?('$'+packet.down+' down'):null, packet.term?(packet.term+' mo'):null, packet.maxOtd?('max $'+packet.maxOtd+' OTD'):null].filter(Boolean).join(' · ') || 'Skipped');
-    });
-  }
-  else if(agentStep===2){
-    botSayOnce('q2', (packetCar() && agentPickedCar)
-      ? 'Here&rsquo;s the target car on your packet — prefilled from the car you liked. Wrong one? Pick any car you&rsquo;ve seen or saved.'
-      : 'Now pick the car you want me to go after — one you saved, or any car you&rsquo;ve seen. The dealer needs an exact car, so there&rsquo;s no packet without one.');
-    box.innerHTML = '<div class="astep"><h4>Target car</h4><select id="carPick">' + carOptionsHTML(!packet.carId) + '</select>' + stepBtns('Looks right →') + '</div>';
-    wireStep(function(skipped){
-      if(!skipped){ var v = $('carPick').value; if(v){ packet.carId = v; agentPickedCar = true; var cc = packetCar(); if(cc){ meSay(cc.name + ' — ' + money(cc.price)); carBubble(cc); } } }
     });
   }
   else if(agentStep===3){
-    botSayOnce('q3','Do you have a <b>trade-in</b>? If yes, I&rsquo;ll grab what it is, its VIN, mileage, what you still owe, condition notes, and photos — exterior, interior, odometer, any damage. The dealer appraises it; I never guess a value.');
-    box.innerHTML = '<div class="astep"><h4>Trade-in?</h4>' +
+    box.innerHTML = '<div class="astep">' + wizHead(3,'Trade-in') +
       '<div class="achips" id="trChips"><button type="button" class="achip" data-v="yes" aria-pressed="false">Yes, I have one</button><button type="button" class="achip" data-v="no" aria-pressed="true">No trade-in</button></div>' +
-      '<div id="trFields" style="display:none;"><label>Trade-in — year, make &amp; model</label><input id="trYmm" placeholder="e.g. 2019 Honda CR-V EX">' +
-      '<label>Trade-in VIN</label><input id="trVin" placeholder="17-character VIN" maxlength="17" style="text-transform:uppercase;">' +
-      '<div class="arow"><div><label>Current mileage</label><input id="trMiles" inputmode="numeric" placeholder="e.g. 42000"></div><div><label>Still owe (payoff $)</label><input id="trOwe" inputmode="numeric" placeholder="0 if owned outright"></div></div>' +
-      '<label>Condition notes</label><textarea id="trCond" placeholder="e.g. New tires last year, small dent on the rear door, no accidents"></textarea>' +
-      '<label>Photos — camera or gallery, as many as you have</label><label class="uplabel">📷 Add trade-in photos<input id="trPhotos" type="file" accept="image/*" multiple style="display:none;"></label><div class="thumbs" id="trThumbs"></div></div>' +
-      stepBtns('Next →') + '</div>';
+      '<div id="trFields" style="display:none;"><label>Year, make &amp; model</label><input id="trYmm" placeholder="e.g. 2019 Honda CR-V EX">' +
+      '<label>VIN</label><input id="trVin" placeholder="17-character VIN" maxlength="17" style="text-transform:uppercase;">' +
+      '<div class="arow"><div><label>Mileage</label><input id="trMiles" inputmode="numeric" placeholder="e.g. 42000"></div><div><label>Still owe ($)</label><input id="trOwe" inputmode="numeric" placeholder="0 if paid off"></div></div>' +
+      '<label>Condition</label><textarea id="trCond" placeholder="e.g. New tires, small dent on rear door"></textarea>' +
+      '<label>Photos</label><label class="uplabel">📷 Add photos<input id="trPhotos" type="file" accept="image/*" multiple style="display:none;"></label><div class="thumbs" id="trThumbs"></div></div>' +
+      '<label>Notes for the dealer (optional)</label><textarea id="ntText" placeholder="e.g. Ready to buy this week if the numbers work.">' + esc(packet.notes) + '</textarea>' +
+      wizNav('Review →', { back:true }) + '</div>';
     if(!packet.trade) packet.trade = { ymm:'', vin:'', miles:'', owe:'', condition:'', photos:[] };
     if(!packet.trade.photos) packet.trade.photos = [];
     var chips = box.querySelectorAll('#trChips .achip');
@@ -2237,17 +2250,14 @@ function renderStep(){
     $('trPhotos').addEventListener('change', function(){ addPhotos(this.files); this.value=''; });
     wireStep(function(){
       var yes = box.querySelector('#trChips .achip[aria-pressed="true"]').getAttribute('data-v')==='yes';
-      if(!yes){ packet.trade = null; meSay('No trade-in'); }
-      else { packet.trade.ymm = $('trYmm').value.trim(); packet.trade.vin = $('trVin').value.trim().toUpperCase(); packet.trade.miles = $('trMiles').value.trim(); packet.trade.owe = $('trOwe').value.trim(); packet.trade.condition = $('trCond').value.trim(); meSay('Trading in ' + (packet.trade.ymm||'a vehicle') + ' · VIN ' + (packet.trade.vin||'—') + ' · ' + (packet.trade.miles||'—') + ' mi · owes ' + (packet.trade.owe?('$'+packet.trade.owe):'—') + ' · ' + packet.trade.photos.length + ' photo(s)'); }
+      if(!yes){ packet.trade = null; }
+      else { packet.trade.ymm = $('trYmm').value.trim(); packet.trade.vin = $('trVin').value.trim().toUpperCase(); packet.trade.miles = $('trMiles').value.trim(); packet.trade.owe = $('trOwe').value.trim(); packet.trade.condition = $('trCond').value.trim(); }
+      packet.notes = $('ntText').value.trim();
     });
-  }
-  else if(agentStep===4){
-    botSayOnce('q4','Anything else the dealer should know? Timeline, a must-have color, “only if the numbers work” — anything. Then I&rsquo;ll build your packet.');
-    box.innerHTML = '<div class="astep"><h4>Notes for the dealer</h4><textarea id="ntText" placeholder="e.g. Ready to buy this week if we land near my monthly target.">' + esc(packet.notes) + '</textarea>' + stepBtns('Build my packet →') + '</div>';
-    wireStep(function(){ packet.notes = $('ntText').value.trim(); if(packet.notes) meSay(packet.notes); });
   }
   else { renderPacketReview(); }
 }
+
 var saidOnce = {};
 function botSayOnce(key, html){ if(saidOnce[key]) return; saidOnce[key]=true; botSay(html); }
 function renderThumbs(){
@@ -2411,7 +2421,7 @@ function classifyResult(res){
 }
 function sendOutreach(){
   var c = packetCar(); if(!c) return;
-  if(!packet.contact.name || !validEmail(packet.contact.email)){ botSay('Before I can send, I need your name and a valid email — the dealer replies to you, not to Motiv.'); agentStep = 0; renderStep(); go('agent'); return; }
+  if(!packet.contact.name || !validEmail(packet.contact.email)){ botSay('I need your name and a valid email first.'); agentStep = 1; renderStep(); go('agent'); return; }
   if(!packet.deal) packet.deal = newDeal();
   packet.deal.emailDraft = buildDealerEmail();
   if(!packet.deal.createdAt) packet.deal.createdAt = new Date().toISOString();
@@ -2426,13 +2436,13 @@ function sendOutreach(){
       deal.dealerEmail = d.dealerEmail || d.to || d.sentTo || null;
       deal.photosConfirmed = (typeof d.photosAttached === 'number') ? d.photosAttached : (typeof d.photosSent === 'number' ? d.photosSent : null);
       deal.error = null;
-      botSay('Done — your inquiry is on its way' + (deal.dealerEmail ? ' to <b>' + esc(deal.dealerEmail) + '</b>' : '') + '. The dealer replies straight to ' + esc(packet.contact.email) + '; paste their reply into the deal screen and I&rsquo;ll break down the numbers.');
+      botSay('Sent' + (deal.dealerEmail ? ' to <b>' + esc(deal.dealerEmail) + '</b>' : '') + '. The dealer replies to you — paste it here and I&rsquo;ll break it down.');
     } else if(kind === 'no_email'){
       deal.status = 'needs_email'; deal.dealerPhone = d.dealerPhone || d.phone || (c.dealer.phone || ''); deal.error = null;
-      botSay('The server couldn&rsquo;t find an email for ' + esc(c.dealer.name) + ' — and I won&rsquo;t guess one. The deal screen has their phone number and a short call script instead.');
+      botSay('No email found for ' + esc(c.dealer.name) + ' — I won&rsquo;t guess one. Their number and a call script are below.');
     } else if(kind === 'form_only'){
       deal.status = 'needs_form'; deal.formUrl = d.contactFormUrl || d.formUrl || ''; deal.error = null;
-      botSay(esc(c.dealer.name) + ' takes inquiries through a web form, not email. The deal screen has the form link and your packet text ready to paste.');
+      botSay(esc(c.dealer.name) + ' uses a web form, not email. The link and your packet text are below.');
     } else {
       deal.status = 'send_failed'; deal.error = d.error || d.message || ('The Motiv server returned HTTP ' + res.status + '.');
       botSay('The send didn&rsquo;t go through — your packet is saved below so you can send it yourself.');
@@ -2536,8 +2546,8 @@ function nextStepsList(){
   if(!deal || !c) return steps;
   var s = deal.status;
   if(s === 'draft'){
-    steps.push('Open the review screen and tap “Send to dealer” — nothing goes out until you tick the consent box.');
-    steps.push('Either way, the dealer replies to ' + (b.email || 'your email') + ' directly.');
+    steps.push('Review the packet and tap Send — nothing goes out without your consent.');
+    steps.push('The dealer replies to ' + (b.email || 'your email') + ' directly.');
   }
   if(s === 'sending') steps.push('Hold on — Motiv is sending through the server now.');
   if(s === 'send_failed') steps.push('The send didn’t go through. Copy the packet below and send it yourself, or retry from the review screen.');
@@ -2571,7 +2581,7 @@ function dealStageIndex(){
   return 0;
 }
 function renderDealScreen(){
-  agentStep = 6;
+  agentStep = 5;
   var c = packetCar(), deal = packet.deal;
   if(!c || !deal){ renderPacketReview(); return; }
   var stages = ['Drafted', 'Sent', 'Awaiting reply', 'Reply received'];
@@ -2620,7 +2630,7 @@ function renderDealScreen(){
     h += '<div class="secttl" style="margin:16px 0 6px;font-size:15px;">Follow-up</div>';
     if(followupDue()){
       var fu = deal.followup || buildFollowupEmail(); deal.followup = fu;
-      h += '<p class="statusline">It&rsquo;s been 2 business days with no reply. Here&rsquo;s a short follow-up — <b>review it and tap send; Motiv never auto-sends.</b></p>';
+      h += '<p class="statusline">2 business days, no reply. <b>Review and tap send — never auto-sent.</b></p>';
       h += '<div class="emailbox"><b>Subject:</b> ' + esc(fu.subject) + '\n\n' + esc(fu.body) + '</div>';
       if(deal.followupError) h += '<div class="formerr">' + esc(deal.followupError) + '</div>';
       h += '<div class="abtns"><button class="btn-grad" id="dsSendFollowup" type="button" style="flex:1;">Send follow-up</button><button class="btn-ghost" id="dsCopyFollowup" type="button" style="flex:1;">Copy it instead</button></div>';
@@ -2628,7 +2638,7 @@ function renderDealScreen(){
       h += '<p class="statusline">Follow-up sent ' + fmtDT(deal.followupSentAt) + '.</p>';
     } else {
       var dd = followupDueDate();
-      h += '<p class="statusline">If there&rsquo;s no reply by <b>' + (dd ? fmtD(dd.toISOString()) : '2 business days') + '</b> (2 business days), Motiv drafts a follow-up here for your approval — it never sends one on its own.</p>';
+      h += '<p class="statusline">No reply by <b>' + (dd ? fmtD(dd.toISOString()) : '2 business days') + '</b>? A follow-up draft appears here for your OK — never auto-sent.</p>';
     }
   }
 
@@ -2637,7 +2647,7 @@ function renderDealScreen(){
     h += replyAnalysisHTML();
     h += '<p class="srcnote" style="margin-top:10px;">Got a newer reply? Paste it below to re-check the numbers.</p>';
   } else {
-    h += '<p class="statusline">Motiv can&rsquo;t see your inbox. When the dealer replies to ' + esc(packet.contact.email) + ', paste their email here and Motiv will pull out the price, monthly, and trade-in numbers and grade the offer against CarGurus.</p>';
+    h += '<p class="statusline">Paste the dealer&rsquo;s reply here — Motiv pulls out the numbers and grades the price.</p>';
   }
   h += '<textarea class="replyta" id="dsReplyText" placeholder="Paste the dealer&rsquo;s reply email here…"></textarea>';
   h += '<button class="btn-grad" id="dsAnalyze" type="button" style="width:100%;margin-top:10px;">Break down this reply</button>';
@@ -2657,39 +2667,40 @@ function renderDealScreen(){
     if(!t){ toast('Paste the dealer’s reply first'); return; }
     deal.reply = { text: t, at: new Date().toISOString(), parsed: parseReply(t) };
     deal.status = 'replied'; persistPacket(); renderDealScreen();
-    botSay('Got it — I&rsquo;ve broken the reply down on the deal screen: price, monthly, trade-in, and how it grades against CarGurus.');
+    botSay('Got it — the breakdown is below.');
     toast('Reply analyzed');
   });
-  $('dsEdit').addEventListener('click', function(){ agentStep = 5; renderPacketReview(); });
+  $('dsEdit').addEventListener('click', function(){ renderPacketReview(); });
   $('dsSaved').addEventListener('click', function(){ persistPacket(); go('saved'); });
   scrollChat();
 }
 
 /* ---- Review screen: full packet + consent + send ---- */
 function renderPacketReview(){
-  agentStep = 5;
+  agentStep = 4;
   var c = packetCar();
-  if(!c){ botSay('One thing missing — pick the car you want me to work on first. The packet needs an exact car.'); agentStep = 2; renderStep(); return; }
-  botSayOnce('q5','Here&rsquo;s your whole packet — review it, edit anything. When you&rsquo;re ready, tick the consent box and tap <b>Send to dealer</b>: Motiv emails the dealer for you and tracks the deal under Saved. No consent, no send — you can still share the packet yourself below.');
+  if(!c){ botSay('Pick a car first — the packet needs an exact car.'); agentStep = 0; renderStep(); return; }
   var tradeRow = packet.trade ? (esc(packet.trade.ymm || 'Vehicle') + '<br>VIN ' + esc(packet.trade.vin||'—') + ' · ' + esc(packet.trade.miles||'—') + ' mi · owes ' + (packet.trade.owe?'$'+esc(packet.trade.owe):'—') + ' · ' + packet.trade.photos.length + ' photo(s)' + (packet.trade.condition ? '<br>Condition: ' + esc(packet.trade.condition) : '')) : 'No trade-in';
   var thumbs = packet.trade && packet.trade.photos.length ? '<div class="thumbs">' + packet.trade.photos.map(function(p){ return '<div class="thumb"><img src="' + p.data + '" alt="Trade-in photo"><span>' + esc(p.label) + '</span></div>'; }).join('') + '</div>' : '';
-  $('stepBox').innerHTML = '<div class="packet"><h4>✦ Your deal packet</h4>' +
-    '<div class="prow"><span class="pk">Buyer</span><span>' + esc(packet.contact.name || '—') + (packet.contact.email ? '<br>' + esc(packet.contact.email) : '') + (packet.contact.phone ? '<br>' + esc(packet.contact.phone) : '') + '</span><button class="edit" data-edit="0" type="button">Edit</button></div>' +
-    '<div class="prow"><span class="pk">Buying</span><span>' + esc(packet.structure||'Not specified') + (packet.monthly?' · $'+esc(packet.monthly)+'/mo target':'') + (packet.down?' · $'+esc(packet.down)+' down':'') + (packet.term?' · '+esc(packet.term)+' mo':'') + (packet.maxOtd?' · max $'+esc(packet.maxOtd)+' OTD':'') + '</span><button class="edit" data-edit="1" type="button">Edit</button></div>' +
-    '<div class="prow"><span class="pk">Car</span><span>' + (c ? esc(c.name)+' — '+esc(c.trim)+'<br>'+money(c.price)+' · '+esc(vinLabel(c))+'<br>'+esc(c.dealer.name) : '—') + '</span><button class="edit" data-edit="2" type="button">Edit</button></div>' +
+  $('stepBox').innerHTML = '<div class="packet">' + wizHead(4,'✦ Your deal packet') +
+    '<div class="prow"><span class="pk">Buyer</span><span>' + esc(packet.contact.name || '—') + (packet.contact.email ? '<br>' + esc(packet.contact.email) : '') + (packet.contact.phone ? '<br>' + esc(packet.contact.phone) : '') + '</span><button class="edit" data-edit="1" type="button">Edit</button></div>' +
+    '<div class="prow"><span class="pk">Buying</span><span>' + esc(packet.structure||'Not specified') + (packet.monthly?' · $'+esc(packet.monthly)+'/mo target':'') + (packet.down?' · $'+esc(packet.down)+' down':'') + (packet.term?' · '+esc(packet.term)+' mo':'') + (packet.maxOtd?' · max $'+esc(packet.maxOtd)+' OTD':'') + '</span><button class="edit" data-edit="2" type="button">Edit</button></div>' +
+    '<div class="prow"><span class="pk">Car</span><span>' + (c ? esc(c.name)+' — '+esc(c.trim)+'<br>'+money(c.price)+' · '+esc(vinLabel(c))+'<br>'+esc(c.dealer.name) : '—') + '</span><button class="edit" data-edit="0" type="button">Edit</button></div>' +
     '<div class="prow"><span class="pk">Trade-in</span><span>' + tradeRow + '</span><button class="edit" data-edit="3" type="button">Edit</button></div>' +
-    (packet.notes ? '<div class="prow"><span class="pk">Notes</span><span>' + esc(packet.notes) + '</span><button class="edit" data-edit="4" type="button">Edit</button></div>' : '') +
+    (packet.notes ? '<div class="prow"><span class="pk">Notes</span><span>' + esc(packet.notes) + '</span><button class="edit" data-edit="3" type="button">Edit</button></div>' : '') +
     thumbs +
     '<div class="summarybox"><b>Agent summary</b><br>' + esc(packetSummary()) + '</div>' +
     '<div class="consentbox"><label class="consent"><input type="checkbox" id="consentChk"><span>' + CONSENT_TEXT + '</span></label>' +
     '<button class="btn-grad" id="sendBtn" type="button" disabled style="width:100%;margin-top:12px;">✉ Send to dealer via Motiv</button>' +
-    '<p class="srcnote" style="margin-top:9px;">' + 'Motiv will email ' + esc(c ? c.dealer.name : 'the dealer') + ' through the Motiv server and ask them to reply to ' + esc(packet.contact.email || 'your email') + '. The server looks up the dealer&rsquo;s email — if it can&rsquo;t find one, you&rsquo;ll get their phone number and a call script instead. Status shows under Saved.' + '</p></div>' +
-    '<button class="btn-ghost" id="prepareBtn" type="button" style="width:100%;margin-top:13px;">Rather send it yourself? Prepare packet</button>' +
+    '<p class="srcnote" style="margin-top:9px;">Motiv emails the dealer; they reply to ' + esc(packet.contact.email || 'your email') + '.</p></div>' +
+    '<button class="btn-ghost" id="prepareBtn" type="button" style="width:100%;margin-top:13px;">Send it yourself instead</button>' +
     '<div id="sendOpts" style="display:none;margin-top:11px;"><div class="arow"><button class="btn-ghost" id="shareBtn" type="button">Share…</button><button class="btn-ghost" id="dlBtn" type="button">Download packet</button></div>' +
     '<div class="arow" style="margin-top:9px;"><button class="btn-ghost" id="mailBtn" type="button">Email draft</button><button class="btn-ghost" id="copyBtn" type="button">Copy summary</button></div>' +
-    '<p class="srcnote" style="margin-top:10px;">Heads-up: a plain email (mailto) draft <b>cannot attach your trade-in photos</b>. Use <b>Share…</b> or <b>Download packet</b> to include them. Your packet and deal status are saved on this device under Saved.</p></div>' +
+    '<p class="srcnote" style="margin-top:10px;">Email drafts can&rsquo;t attach photos — use <b>Share…</b> or <b>Download</b> to include them.</p></div>' +
+    '<div class="abtns"><button class="btn-ghost" id="pktBack" type="button" style="flex:1;">&#8592; Back</button></div>' +
     '</div>';
-  $('stepBox').querySelectorAll('[data-edit]').forEach(function(b){ b.addEventListener('click', function(){ agentStep = +b.getAttribute('data-edit'); saidOnce['q'+agentStep]=true; renderStep(); }); });
+  $('stepBox').querySelectorAll('[data-edit]').forEach(function(b){ b.addEventListener('click', function(){ agentStep = +b.getAttribute('data-edit'); agentReturn = true; renderStep(); }); });
+  $('pktBack').addEventListener('click', function(){ agentStep = 3; renderStep(); });
   var chk = $('consentChk'), sb = $('sendBtn');
   chk.addEventListener('change', function(){ sb.disabled = !chk.checked; });
   sb.addEventListener('click', function(){ if(!chk.checked) return; persistPacket(); sendOutreach(); });
