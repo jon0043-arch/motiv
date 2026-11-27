@@ -1033,15 +1033,24 @@
      around his circle and a gentle purple glow behind him. He is a
      touch bigger than before (58px circle) but still fully inside
      the 64px pill. */
-  .moetab-circle{width:58px;height:58px;border-radius:50%;background:linear-gradient(165deg,#ffffff,#eaf5fd) padding-box,linear-gradient(135deg,#0181ec 0%,#35b9fa 55%,#7adeff 100%) border-box;border:2.5px solid transparent;box-shadow:0 0 20px 3px rgba(120,199,255,.38),0 4px 14px rgba(110,194,255,.42),inset 0 1px 0 #ffffff;display:flex;align-items:center;justify-content:center;flex:none;animation:moeHalo 3.6s ease-in-out infinite;}
-  .moetab-circle .moe{width:46px;height:41px;animation:moeBob 3.6s ease-in-out infinite;}
+  .moetab-circle{width:58px;height:58px;border-radius:50%;background:linear-gradient(165deg,#ffffff,#eaf5fd) padding-box,linear-gradient(135deg,#0181ec 0%,#35b9fa 55%,#7adeff 100%) border-box;border:2.5px solid transparent;box-shadow:0 0 20px 3px rgba(120,199,255,.38),0 4px 14px rgba(110,194,255,.42),inset 0 1px 0 #ffffff;display:flex;align-items:center;justify-content:center;flex:none;position:relative;}
+  .moetab-circle::before{content:"";position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(120,199,255,.55) 0%,rgba(120,199,255,.26) 55%,rgba(120,199,255,0) 72%);z-index:-1;opacity:.55;animation:moeGlow 3.6s ease-in-out infinite;will-change:transform,opacity;pointer-events:none;}
+  .moetab-circle .moe{width:46px;height:41px;animation:moeBob 3.6s ease-in-out infinite;will-change:transform;}
   /* The gentle life: Moe bobs a couple of pixels and breathes a
      whisper of scale on a slow 3.6s loop while the ring's halo glow
      swells and settles on the same beat — the gradient ring itself,
      his size and his spot never change. The eye patches are children
-     of the artwork, so they ride the bob with him and stay aligned. */
+     of the artwork, so they ride the bob with him and stay aligned.
+     SMOOTHNESS (Nov 27, 2026): every footer-Moe animation is
+     GPU-composited — transform and opacity ONLY. The halo used to
+     animate box-shadow on the circle, which repaints every frame
+     and stuttered on Home; the glow is now its own layer behind
+     the circle (::before, a static radial gradient) whose opacity
+     and scale pulse instead. Bob and blink carry will-change:
+     transform so they stay on their own compositor layers, and the
+     footer DOM is never re-rendered, so the loops never restart. */
   @keyframes moeBob{0%,100%{transform:translateY(.8px) scale(1);}50%{transform:translateY(-1.8px) scale(1.025);}}
-  @keyframes moeHalo{0%,100%{box-shadow:0 0 20px 3px rgba(120,199,255,.38),0 4px 14px rgba(110,194,255,.42),inset 0 1px 0 #ffffff;}50%{box-shadow:0 0 27px 5px rgba(120,199,255,.52),0 4px 16px rgba(110,194,255,.55),inset 0 1px 0 #ffffff;}}
+  @keyframes moeGlow{0%,100%{opacity:.5;transform:scale(.96);}50%{opacity:.92;transform:scale(1.05);}}
   .moetab:active .moetab-circle{transform:scale(.93);}
 
   /* Footer Moe's eyes — his artwork is one flat image with the smiling
@@ -1057,7 +1066,7 @@
   .moe-eye-l{left:26%;top:40%;width:27%;height:21%;}
   .moe-eye-r{left:57%;top:37%;width:24%;height:21%;}
   .moe-glance{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
-  .moe-arc{display:block;width:70%;height:54%;border:2px solid #fff;border-bottom:0;border-radius:999px 999px 0 0;box-shadow:0 0 5px 1px rgba(164,216,255,.75),inset 0 0 3px rgba(164,216,255,.8);transform-origin:50% 55%;animation:moeBlink 6s ease-in-out infinite;}
+  .moe-arc{display:block;width:70%;height:54%;border:2px solid #fff;border-bottom:0;border-radius:999px 999px 0 0;box-shadow:0 0 5px 1px rgba(164,216,255,.75),inset 0 0 3px rgba(164,216,255,.8);transform-origin:50% 55%;animation:moeBlink 6s ease-in-out infinite;will-change:transform;}
   @keyframes moeBlink{0%,13%,100%{transform:scaleY(1);}15.5%{transform:scaleY(.06);}18%{transform:scaleY(1);}46%{transform:scaleY(1);}48.5%{transform:scaleY(.06);}51%{transform:scaleY(1);}74%{transform:scaleY(1);}76.5%{transform:scaleY(.06);}79%{transform:scaleY(1);}82.5%{transform:scaleY(.06);}85%{transform:scaleY(1);}}
 
   /* Moe intro sheet — tapping footer Moe pops this up over the app */
@@ -1151,7 +1160,7 @@
   .photoview-card .btn-ghost{width:100%;}
   @media (prefers-reduced-motion: reduce){
     .moe-arc{animation:none;}
-    .moetab-circle,.moetab-circle .moe{animation:none;}
+    .moetab-circle,.moetab-circle .moe,.moetab-circle::before{animation:none;}
     .moesheet-moe{animation:none;}
     .moesheet-card{animation:none;}
     .moeguide-card,.moeguide-moe,.moeguide-bubble.say{animation:none;}
@@ -1724,10 +1733,235 @@
   .fitcar .fc-t{display:block;padding:7px 9px 9px;}
   .fitcar .fc-n{display:block;font-size:11.5px;font-weight:800;line-height:1.25;letter-spacing:-.1px;}
   .fitcar .fc-p{display:block;font-size:12.5px;font-weight:800;color:#288ed9;margin-top:2px;}
+
+  /* ---------- Desktop layout (Jon's 3x3 mockup, Nov 27, 2026) ----------
+     ONE app, two layouts. Everything above this block is the phone
+     app, untouched. At 1024px and wider the same views, the same
+     state and the same render functions get a desktop presentation:
+     a top nav replaces the footer pill, Home widens around the same
+     Audi hero and filter card, Discover gains a filter sidebar, a
+     matches grid and a car-detail panel beside the same swipe deck,
+     Saved and Your Garage gain side navs, and Compare renders up to
+     three saved cars side by side. Every number below is painted by
+     the desktop script from the app's real data (state.deck,
+     state.savedOrder, packet, monthlyEst) — the mockup's figures
+     were placeholders and appear nowhere. */
+  .desknav,.desk-side,.desk-extra,.desk-saved-side,.desk-garage-nav,.desk-compare,.desk-tour-steps{display:none;}
+  @media (min-width:1024px){
+    .app{max-width:none;box-shadow:none;}
+    .tabbar{display:none;}
+    .dusk{max-width:none;}
+
+    /* ----- Top nav (every desktop screen) ----- */
+    .desknav{display:flex;align-items:center;gap:30px;height:66px;padding:0 30px;background:#fff;border-bottom:1px solid var(--line);flex:none;position:relative;z-index:210;}
+    .desknav-brand{display:flex;align-items:center;gap:9px;border:0;background:none;cursor:pointer;padding:6px 4px;font-family:inherit;}
+    .desknav-brand .wordmark{font-size:27px;color:var(--ink);}
+    .desknav-links{display:flex;gap:4px;}
+    .desknav-links button{border:0;background:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:700;color:#465460;padding:10px 17px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;min-height:42px;}
+    .desknav-links button:hover{background:#eef4fa;}
+    .desknav-links button.active{background:var(--grad);color:#fff;}
+    .dnav-bdg{display:none;background:#e02434;color:#fff;font-size:11px;font-weight:800;border-radius:999px;min-width:20px;height:20px;padding:0 6px;align-items:center;justify-content:center;}
+    .desknav-links button.active .dnav-bdg{background:#fff;color:#0181ec;}
+    .desknav-tools{margin-left:auto;display:flex;align-items:center;gap:12px;}
+    .desksearch{display:flex;gap:8px;}
+    .desksearch input{border:1.5px solid #d7e5f1;border-radius:999px;padding:0 17px;height:42px;width:250px;font-family:inherit;font-size:14px;color:var(--ink);outline:none;background:#fbfdff;}
+    .desksearch input:focus{border-color:#35b9fa;}
+    .desksearch button{border:0;border-radius:999px;background:var(--grad);color:#fff;font-family:inherit;font-size:14px;font-weight:700;padding:0 18px;cursor:pointer;min-height:42px;}
+    .desknav-icon{width:42px;height:42px;border-radius:50%;border:0;background:#eff3f7;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;position:relative;}
+    .desknav-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+    .desknav-moe{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;background:linear-gradient(120deg,#eaf5fd,#dceffd);color:#0b5fa5;font-family:inherit;font-size:14.5px;font-weight:800;padding:7px 16px 7px 9px;cursor:pointer;min-height:42px;}
+    .desknav-moe .moe{width:30px;height:27px;}
+
+    /* ----- Home ----- */
+    #view-home{background:#fff;}
+    #view-home .home-topbar{display:none;}
+    #view-home .home-inner{max-width:1280px;margin:0 auto;width:100%;padding:36px 42px 0;}
+    #view-home h1.find{font-size:54px;margin-top:8px;}
+    #view-home .sub{font-size:17px;}
+    #view-home .home-lower{max-width:1280px;margin:0 auto;width:100%;padding:0 42px 52px;}
+    #view-home .fcard-wrap{max-width:800px;}
+    #view-home .cta{max-width:800px;}
+    #view-home .trustline{max-width:800px;}
+    #view-home .more-filters-link{max-width:800px;}
+    #view-home .quickrow{max-width:800px;}
+    #view-home .style-head{margin-top:38px;}
+    #view-home .stylerow{grid-template-columns:repeat(4,1fr);gap:14px;}
+    #view-home .stile{aspect-ratio:1.25;}
+    #view-home .meetmoe{max-width:540px;}
+
+    /* ----- Discover: sidebar + swipe deck + matches grid + detail ----- */
+    #view-discover .whead{display:none;}
+    #view-discover .wbody{display:grid;grid-template-columns:252px minmax(0,1fr);column-gap:28px;max-width:1280px;margin:0 auto;width:100%;padding:20px 34px 10px;align-items:start;}
+    #view-discover .desk-side{display:block;grid-column:1;grid-row:1 / span 12;position:sticky;top:20px;background:#fff;border:1.5px solid #e5eef6;border-radius:18px;padding:18px 16px;box-shadow:0 6px 18px rgba(16,34,50,.05);}
+    #view-discover #matchesCard,#view-discover #deck,#view-discover #deckEmpty,#view-discover #discGate,#view-discover .desk-extra{grid-column:2;}
+    #view-discover #matchesCard{max-width:660px;margin:0 auto;width:100%;}
+    #view-discover .deck{height:608px;max-width:660px;margin:0 auto 8px;width:100%;}
+    #view-discover .desk-extra{display:block;min-width:0;}
+    #view-discover .ins-strip{max-width:1212px;width:calc(100% - 68px);margin:8px auto 16px;}
+    .dside-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+    .dside-head h3{margin:0;font-size:17px;font-weight:800;letter-spacing:-.2px;}
+    .dside-clear{border:0;background:none;color:#0181ec;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;padding:6px 4px;min-height:32px;}
+    .dside-group{margin-top:16px;}
+    .dside-group h4{margin:0 0 8px;font-size:13px;font-weight:800;color:#6a747d;}
+    .dside-opt{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;border:1px solid transparent;background:none;border-radius:10px;padding:9px 12px;font-family:inherit;font-size:14px;font-weight:600;color:#333f4a;cursor:pointer;min-height:38px;text-align:left;}
+    .dside-opt:hover{background:#f2f8fd;}
+    .dside-opt.on{background:#eaf5fd;border-color:#bcd9f2;color:#0b5fa5;}
+    .dside-opt .cnt{font-size:12px;font-weight:700;color:#8fa3b3;}
+    .dside-opt.on .cnt{color:#2177b6;}
+    .dside-price{font-size:14.5px;font-weight:800;color:var(--ink);margin:2px 2px 9px;}
+    .dside-set{width:100%;border:1.5px solid #cfe3f2;background:#fbfdff;border-radius:11px;padding:10px;font-family:inherit;font-size:13.5px;font-weight:700;color:#0b5fa5;cursor:pointer;min-height:42px;}
+    .dside-feats{display:flex;flex-wrap:wrap;gap:6px;}
+    .dside-feats span{font-size:12px;font-weight:700;background:#eaf5fd;color:#2177b6;border-radius:999px;padding:5px 10px;}
+    .dside-feats span.none{background:#f1f5f8;color:#8fa3b3;}
+    .dside-more{width:100%;margin-top:18px;}
+    .desk-grid-head{display:flex;align-items:center;gap:13px;margin:28px 0 14px;}
+    .desk-grid-head h3{margin:0;font-size:21px;font-weight:800;letter-spacing:-.3px;}
+    .desk-grid-head .dcount{font-size:13.5px;font-weight:600;color:var(--muted);}
+    .desk-sort{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--muted);}
+    .desk-sort select{font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);border:1.5px solid #d7e5f1;border-radius:10px;padding:9px 11px;background:#fff;cursor:pointer;min-height:42px;}
+    .desk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:16px;}
+    .dcard{position:relative;border:1.5px solid #e5eef6;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;display:flex;flex-direction:column;box-shadow:0 4px 14px rgba(16,34,50,.05);text-align:left;font-family:inherit;padding:0;}
+    .dcard:hover{border-color:#bcd9f2;box-shadow:0 10px 24px rgba(16,34,50,.10);}
+    .dcard img.dcard-photo{width:100%;height:148px;object-fit:cover;display:block;background:#eef2f7;}
+    .dcard img.dcard-photo.cutout{object-fit:contain;background:#f4f7fa;}
+    .dcard .nophoto{height:148px;}
+    .dcard-body{padding:11px 14px 13px;display:flex;flex-direction:column;gap:2px;flex:1;}
+    .dcard-name{font-size:15px;font-weight:800;line-height:1.25;letter-spacing:-.2px;color:var(--ink);}
+    .dcard-trim{font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.3;}
+    .dcard-meta{font-size:12px;color:var(--muted);margin-top:3px;}
+    .dcard-pr{display:flex;align-items:baseline;gap:9px;margin-top:7px;flex-wrap:wrap;}
+    .dcard-price{font-size:17px;font-weight:800;color:var(--ink);}
+    .dcard-mo{font-size:13px;font-weight:700;color:#2177b6;}
+    .dcard .dealchip{margin-left:0;}
+    .dcard-save{position:absolute;top:10px;right:10px;width:37px;height:37px;border-radius:50%;border:0;background:rgba(255,255,255,.94);box-shadow:0 4px 12px rgba(16,34,50,.18);cursor:pointer;font-size:16px;line-height:1;color:#5b7183;display:flex;align-items:center;justify-content:center;min-height:37px;padding:0;}
+    .dcard-save.on{background:var(--grad);color:#fff;}
+    .desk-empty-note{font-size:14px;color:var(--muted);line-height:1.55;padding:18px 2px;}
+
+    /* ----- Car detail (desktop panel inside Discover) ----- */
+    .desk-detail{margin-top:26px;border:1.5px solid #e5eef6;border-radius:20px;background:#fff;box-shadow:0 8px 22px rgba(16,34,50,.06);padding:20px 22px 24px;}
+    .dd-back{border:0;background:none;color:#0181ec;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;padding:6px 2px;min-height:36px;margin-bottom:8px;}
+    .dd-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,1fr);gap:28px;align-items:start;}
+    .dd-main{display:block;width:100%;border:0;padding:0;background:#eef2f7;border-radius:16px;overflow:hidden;cursor:pointer;}
+    .dd-main img{width:100%;height:372px;object-fit:cover;display:block;}
+    .dd-main img.cutout{object-fit:contain;background:#f4f7fa;}
+    .dd-main .nophoto{height:372px;}
+    .dd-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+    .dd-thumb{border:2px solid transparent;border-radius:10px;padding:0;background:none;cursor:pointer;overflow:hidden;min-height:0;}
+    .dd-thumb img{width:78px;height:56px;object-fit:cover;display:block;}
+    .dd-thumb.on{border-color:var(--purple);}
+    .dd-info h3{margin:0;font-size:25px;font-weight:800;letter-spacing:-.4px;line-height:1.15;}
+    .dd-trim{font-size:14.5px;font-weight:600;color:var(--muted);margin-top:3px;}
+    .dd-dealer{font-size:13.5px;color:var(--muted);margin-top:7px;}
+    .dd-pricerow{display:flex;align-items:baseline;gap:13px;margin-top:15px;flex-wrap:wrap;}
+    .dd-price{font-size:29px;font-weight:800;letter-spacing:-.5px;}
+    .dd-mo{font-size:15px;font-weight:700;color:#2177b6;}
+    .dd-info .ficons{border-top:0;margin-top:14px;padding:10px 6px;border:1px solid #e5eef6;border-radius:14px;background:#f7fbfe;}
+    .dd-feats{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px;}
+    .dd-feats span{font-size:12.5px;font-weight:700;background:#eef4f9;color:#33536e;border-radius:999px;padding:6px 11px;}
+    .dd-meta{margin-top:16px;}
+    .dd-meta div{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid #eef3f7;font-size:13.5px;}
+    .dd-meta div:last-child{border-bottom:0;}
+    .dd-meta span{color:var(--muted);font-weight:600;}
+    .dd-meta b{font-weight:700;text-align:right;}
+    .dd-ask{display:block;width:100%;margin-top:18px;background:var(--grad);color:#fff;border:0;border-radius:13px;padding:14px;font-size:15.5px;font-weight:800;font-family:inherit;cursor:pointer;box-shadow:0 8px 20px rgba(1,129,236,.28);min-height:50px;}
+    .dd-row{display:flex;gap:10px;margin-top:10px;}
+    .dd-row .btn-grad,.dd-row .btn-ghost{flex:1;}
+    .dd-view{margin-top:12px;text-align:center;font-size:14px;}
+
+    /* ----- Saved ----- */
+    #view-saved .whead{display:none;}
+    #view-saved.active{flex-direction:row;align-items:flex-start;}
+    .desk-saved-side{display:block;width:238px;flex:none;padding:28px 0 28px 32px;position:sticky;top:0;}
+    .desk-saved-side h3{margin:0 0 14px;font-size:21px;font-weight:800;letter-spacing:-.3px;}
+    #view-saved #savedBody{flex:1;min-width:0;max-width:940px;padding:24px 34px 34px 24px;}
+    .dside-nav button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;border:0;background:none;border-radius:12px;padding:12px 14px;font-family:inherit;font-size:15px;font-weight:700;color:#333f4a;cursor:pointer;min-height:46px;text-align:left;}
+    .dside-nav button:hover{background:#f2f8fd;}
+    .dside-nav button.on{background:#eaf5fd;color:#0b5fa5;}
+    .dside-nav .cnt{font-size:12.5px;font-weight:800;background:#eef4f9;color:#5b7183;border-radius:999px;padding:3px 9px;}
+    .dside-nav button.on .cnt{background:#fff;color:#0b5fa5;}
+
+    /* ----- Your Garage ----- */
+    #view-more .whead{display:none;}
+    #view-more.active{flex-direction:row;align-items:flex-start;}
+    .desk-garage-nav{display:block;width:224px;flex:none;padding:28px 0 28px 32px;position:sticky;top:0;}
+    .desk-garage-nav h3{margin:0 0 14px;font-size:21px;font-weight:800;letter-spacing:-.3px;}
+    #view-more .wbody{flex:1;min-width:0;max-width:1080px;padding:24px 34px 34px 24px;}
+    #youProfile{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+    #youProfile .ycard{margin-bottom:0;}
+    #youProfile #youFitCars{grid-column:1 / -1;}
+    #youProfile .fitcar img.fitphoto{height:118px;}
+    #youProfile .fitcar .nophoto{height:118px;}
+
+    /* ----- Compare (up to 3 saved cars) ----- */
+    #view-compare .whead{display:none;}
+    #view-compare #compareBody{display:none;}
+    .desk-compare{display:block;max-width:1200px;margin:0 auto;width:100%;padding:26px 34px 40px;}
+    .dcmp-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+    .dcmp-head h3{margin:0;font-size:24px;font-weight:800;letter-spacing:-.4px;}
+    .dcmp-cols{display:grid;gap:16px;margin-bottom:6px;}
+    .dcmp-car{position:relative;border:1.5px solid #e5eef6;border-radius:16px;overflow:hidden;background:#fff;}
+    .dcmp-car img{width:100%;height:170px;object-fit:cover;display:block;background:#eef2f7;}
+    .dcmp-car img.cutout{object-fit:contain;background:#f4f7fa;}
+    .dcmp-car .nophoto{height:170px;}
+    .dcmp-car .ci{padding:11px 14px 13px;}
+    .dcmp-car .cn{font-size:15px;font-weight:800;line-height:1.25;}
+    .dcmp-car .ct{font-size:12.5px;font-weight:600;color:var(--muted);}
+    .dcmp-car .cp{font-size:17px;font-weight:800;color:var(--purple);margin-top:4px;}
+    .dcmp-rm{position:absolute;top:9px;right:9px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.94);box-shadow:0 4px 10px rgba(16,34,50,.18);cursor:pointer;font-size:15px;color:#465460;display:flex;align-items:center;justify-content:center;min-height:32px;padding:0;}
+    .dcmp-add{border:2px dashed #c9dcea;border-radius:16px;background:#fafcfe;padding:16px;display:flex;flex-direction:column;gap:8px;}
+    .dcmp-add h4{margin:0 0 2px;font-size:15px;font-weight:800;}
+    .dcmp-add button{border:1px solid #d7e5f1;background:#fff;border-radius:11px;padding:10px 12px;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer;text-align:left;min-height:42px;}
+    .dcmp-add button:hover{border-color:#35b9fa;}
+    .dcmp-add button small{display:block;font-weight:600;color:var(--muted);margin-top:1px;}
+    .dcmp-empty{border:1.5px solid #e5eef6;border-radius:18px;padding:34px 26px;text-align:center;background:#fff;}
+    .dcmp-empty p{font-size:15px;color:var(--muted);line-height:1.55;margin:0 0 16px;}
+    .desk-compare table.cmp{background:#fff;border:1.5px solid #e5eef6;border-radius:16px;border-collapse:separate;border-spacing:0;overflow:hidden;box-shadow:0 8px 20px rgba(16,34,50,.05);}
+
+    /* ----- Preferences / Agent / Legal ----- */
+    #view-prefs .home-inner{max-width:880px;margin:0 auto;width:100%;padding:32px 42px 48px;}
+    #view-agent .whead{display:none;}
+    #view-agent .wbody{max-width:840px;margin:0 auto;width:100%;padding:26px 34px 40px;}
+    #view-privacy .wbody,#view-terms .wbody{max-width:840px;margin:0 auto;width:100%;padding:20px 34px 44px;}
+
+    /* ----- Sheets & tutorial on desktop: centered cards ----- */
+    .moesheet{align-items:center;}
+    .moesheet-card{margin:0 auto;}
+    .moeguide-card{max-width:600px;}
+    .swipetour .moesheet-card{max-width:880px;width:calc(100% - 80px);padding:36px 44px 30px;}
+    .swipetour .tour-steps{display:none;}
+    .swipetour .desk-tour-steps{display:block;max-width:520px;margin:14px auto 20px;}
+    .swipetour .tour-stage{height:252px;max-width:560px;margin-left:auto;margin-right:auto;}
+    .swipetour .btn-grad{max-width:520px;margin:0 auto;display:block;width:100%;}
+    .moepop{left:auto;right:26px;bottom:26px;}
+  }
+
 </style>
 </head>
 <body>
 <div class="app" id="app">
+  <!-- Desktop top nav (mockup): shown at 1024px+ only, where it
+       replaces the phone footer pill. Same destinations, same
+       actions — Discover / Saved / Compare / You, search wired to
+       the same "Anything else?" keyword store, bell with the same
+       honest answer, and Moe opening the same Moe sheet. -->
+  <header class="desknav" id="deskNav">
+    <button class="desknav-brand" id="deskBrand" type="button" aria-label="Moetiv — back to Home"><span class="bars"><i></i><i></i></span><span class="wordmark">Moetiv</span></button>
+    <nav class="desknav-links" aria-label="Main">
+      <button data-dnav="discover" type="button">Discover</button>
+      <button data-dnav="saved" type="button">Saved<span class="dnav-bdg" id="deskSavedBdg">0</span></button>
+      <button data-dnav="compare" type="button">Compare</button>
+      <button data-dnav="more" type="button">You</button>
+    </nav>
+    <div class="desknav-tools">
+      <div class="desksearch">
+        <input id="deskSearch" type="search" placeholder="Search make, model, keyword…" aria-label="Search cars by keyword">
+        <button id="deskSearchBtn" type="button">Search</button>
+      </div>
+      <button class="desknav-icon" id="deskBell" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.2 16.5v-5.2a5.8 5.8 0 0 1 11.6 0v5.2l1.3 2.8H4.9l1.3-2.8z"/><path d="M10 21.5a2.2 2.2 0 0 0 4 0"/></svg></button>
+      <button class="desknav-moe" id="deskMoeBtn" type="button"><span class="moe" aria-hidden="true"></span>Ask Moe</button>
+    </div>
+  </header>
+
 
   <!-- ============ HOME ============ -->
   <section class="view active" id="view-home">
@@ -1909,6 +2143,7 @@
       <button class="iconbtn" id="locBtn" type="button" aria-label="Location and distance — set under More Filters"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.2S5.6 15.9 5.6 10.5a6.4 6.4 0 0 1 12.8 0c0 5.4-6.4 10.7-6.4 10.7z"/><circle cx="12" cy="10.5" r="2.3"/></svg></button>
     </div>
     <div class="wbody" style="padding-bottom:0;">
+      <aside class="desk-side" id="deskSide" aria-label="Filters"></aside>
       <div class="disc-gate" id="discGate" hidden>
         <h3>Set up your profile first</h3>
         <p>Moe will find cars that actually fit — your budget, the kind of car you want, and your trade-in. It takes about a minute.</p>
@@ -1935,6 +2170,23 @@
         <button class="btn-grad" id="emptySaved" type="button">View Saved</button>
         <button class="btn-ghost" id="emptyRestart" type="button" style="margin-left:8px;">Start over</button>
       </div>
+      <div class="desk-extra" id="deskExtra">
+        <div class="desk-grid-head">
+          <h3 id="deskGridTitle">Your Matches</h3>
+          <span class="dcount" id="deskGridCount" aria-live="polite"></span>
+          <label class="desk-sort">Sort
+            <select id="deskSort" aria-label="Sort matches">
+              <option value="best">Best Match</option>
+              <option value="plo">Price: Low to High</option>
+              <option value="phi">Price: High to Low</option>
+              <option value="year">Year: Newest</option>
+              <option value="miles">Mileage: Lowest</option>
+            </select>
+          </label>
+        </div>
+        <div class="desk-grid" id="deskGrid"></div>
+        <div class="desk-detail" id="deskDetail" hidden></div>
+      </div>
     </div>
     <button class="ins-strip" id="discInsights" type="button" aria-label="Moe&rsquo;s Insights — open on the You page">
       <span class="moe" aria-hidden="true"></span>
@@ -1949,6 +2201,15 @@
   <!-- ============ SAVED ============ -->
   <section class="view" id="view-saved">
     <div class="whead"><div class="wtitle">Saved</div></div>
+    <aside class="desk-saved-side" id="deskSavedSide">
+      <h3>Saved</h3>
+      <div class="dside-nav">
+        <button data-dsaved="all" type="button" class="on">All Saved<span class="cnt" id="deskSavedAll">0</span></button>
+        <button data-dsaved="cars" type="button">Cars<span class="cnt" id="deskSavedCars">0</span></button>
+        <button data-dsaved="searches" type="button">Searches<span class="cnt">0</span></button>
+        <button data-dsaved="compare" type="button">Compare List<span class="cnt" id="deskSavedCmp">0</span></button>
+      </div>
+    </aside>
     <div class="wbody" id="savedBody"></div>
   </section>
 
@@ -1960,6 +2221,7 @@
       <span style="width:42px;"></span>
     </div>
     <div class="wbody" id="compareBody"></div>
+    <div class="desk-compare" id="deskCompare"></div>
   </section>
 
   <!-- ============ MORE — Shape Moetiv (user feedback) ============ -->
@@ -1968,6 +2230,16 @@
       <div class="brand"><span class="bars sm"><i></i><i></i></span><span class="wordmark sm">Moetiv</span></div>
       <button class="iconbtn" id="youGear" type="button" aria-label="Settings — go to Account and Privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.1"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.64 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34A1.7 1.7 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09c0 .68.4 1.3 1 1.55.61.26 1.32.1 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87c.26.6.87 1 1.55 1H21a2 2 0 1 1 0 4h-.09c-.68 0-1.3.4-1.51 1z"/></svg></button>
     </div>
+    <aside class="desk-garage-nav" id="deskGarageNav">
+      <h3>Your Garage</h3>
+      <div class="dside-nav">
+        <button data-dgarage="overview" type="button" class="on">Overview</button>
+        <button data-dgarage="preferences" type="button">Preferences</button>
+        <button data-dgarage="tradein" type="button">Trade-in</button>
+        <button data-dgarage="documents" type="button">Documents</button>
+        <button data-dgarage="settings" type="button">Settings</button>
+      </div>
+    </aside>
     <div class="wbody">
       <!-- Your Garage header: borderless, blends into the white
            page — profile mark and title on the left, Jon's silver
@@ -2200,6 +2472,11 @@
         <li><span class="tour-ic save" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.5C6.9 16.9 3.6 13.7 3.6 10.1 3.6 7.5 5.6 5.4 8.1 5.4c1.6 0 3.1.8 3.9 2.1.8-1.3 2.3-2.1 3.9-2.1 2.5 0 4.5 2.1 4.5 4.7 0 3.6-3.3 6.8-8.4 10.4z"/></svg></span><span><b>Swipe right</b> &mdash; Save it.</span></li>
         <li><span class="tour-ic pass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>Swipe left</b> &mdash; Pass on it.</span></li>
         <li><span class="tour-ic tap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11.2V5.4a1.7 1.7 0 0 1 3.4 0v4.4l3.9 1c1.1.3 1.8 1.3 1.7 2.4l-.3 3.4a5 5 0 0 1-5 4.4h-.6a5 5 0 0 1-4-2L5 14.6a1.7 1.7 0 0 1 2.6-2l1.4 1.1z"/></svg></span><span><b>Tap the car</b> &mdash; Explore the details.</span></li>
+      </ol>
+      <ol class="tour-steps desk-tour-steps">
+        <li><span class="tour-ic save" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.5C6.9 16.9 3.6 13.7 3.6 10.1 3.6 7.5 5.6 5.4 8.1 5.4c1.6 0 3.1.8 3.9 2.1.8-1.3 2.3-2.1 3.9-2.1 2.5 0 4.5 2.1 4.5 4.7 0 3.6-3.3 6.8-8.4 10.4z"/></svg></span><span><b>Swipe right</b> &mdash; Save it.</span></li>
+        <li><span class="tour-ic pass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>Swipe left</b> &mdash; Pass on it.</span></li>
+        <li><span class="tour-ic tap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11.2V5.4a1.7 1.7 0 0 1 3.4 0v4.4l3.9 1c1.1.3 1.8 1.3 1.7 2.4l-.3 3.4a5 5 0 0 1-5 4.4h-.6a5 5 0 0 1-4-2L5 14.6a1.7 1.7 0 0 1 2.6-2l1.4 1.1z"/></svg></span><span><b>Click the car</b> &mdash; Explore the details.</span></li>
       </ol>
       <button class="btn-grad" id="swipeTourDone" type="button">Start swiping &rarr;</button>
       <button class="tour-skip" id="swipeTourSkip" type="button">Skip</button>
@@ -7717,6 +7994,408 @@ try {
     setTimeout(function(){ try { openMoeGuide(); } catch(e){} }, 550);
   }
 } catch(e){}
+</script>
+<script>
+/* ================= Desktop layer (Jon's mockup, Nov 27, 2026) =================
+   Presentation only. This block reads the SAME state the phone app
+   runs on — state.deck, state.saved / savedOrder, state.compare,
+   packet, the Home filter controls — and calls the SAME actions
+   (go, toggleSave, startAskNumbers, similarDeck, segmentDeck,
+   openWheel, buildSeedDeck). Nothing here keeps a second copy of
+   the data: a car saved on the phone deck is the car the desktop
+   grid, Saved sidebar and Compare all read. */
+var deskSort = 'best';
+var deskDetailId = null;
+var deskCmp = [];
+
+function deskIsWide(){ return window.matchMedia && window.matchMedia('(min-width: 1024px)').matches; }
+function deskDealChip(car){
+  if(car.dealRating && typeof car.expectedPrice === 'number' && car.expectedPrice > 0){
+    var cls = car.dealRating === 'great' ? 'deal-great' : (car.dealRating === 'good' ? 'deal-good' : 'deal-fair');
+    return '<span class="dealchip ' + cls + '">' + esc(String(car.dealRating).toUpperCase()) + ' DEAL</span>';
+  }
+  return '';
+}
+function deskFeatStrip(car){
+  var fics = '';
+  if(/awd|4wd/i.test(car.drivetrain || '') || car.features.indexOf('AWD') > -1) fics += ficell(FICONS.awd, 'AWD');
+  if(typeof car.fuelEconomy === 'number') fics += ficell(FICONS.mpg, Math.round(car.fuelEconomy) + ' ' + (car.mpgUnit || 'MPG'));
+  if(car.features.indexOf('Heated Seats') > -1) fics += ficell(FICONS.heat, 'Heated Seats');
+  if(car.features.indexOf('Apple CarPlay') > -1) fics += ficell(FICONS.play, 'CarPlay');
+  return fics ? '<div class="ficons">' + fics + '</div>' : '';
+}
+function deskSortedDeck(){
+  var cars = (state.deck || []).slice();
+  if(deskSort === 'plo') cars.sort(function(a, b){ return a.price - b.price; });
+  else if(deskSort === 'phi') cars.sort(function(a, b){ return b.price - a.price; });
+  else if(deskSort === 'year') cars.sort(function(a, b){ return (b.year || 0) - (a.year || 0); });
+  else if(deskSort === 'miles') cars.sort(function(a, b){
+    var am = a.mileage == null ? Infinity : a.mileage, bm = b.mileage == null ? Infinity : b.mileage;
+    return am - bm;
+  });
+  return cars;
+}
+
+/* ----- Discover: filter sidebar ----- */
+function renderDeskSide(){
+  var side = $('deskSide'); if(!side) return;
+  var pool = allPool();
+  var typeCounts = {}, condCounts = { new: 0, used: 0, cpo: 0 };
+  pool.forEach(function(c){
+    var bt = c.bodyType || 'SUV'; typeCounts[bt] = (typeCounts[bt] || 0) + 1;
+    var st = c.stockType || 'used'; if(condCounts[st] != null) condCounts[st]++;
+  });
+  var curType = $('vtype') ? $('vtype').value : '';
+  var curCond = pressedVal('stockChips', 'data-stock');
+  var types = [['', 'Any type'], ['SUV', 'SUV'], ['Sedan', 'Sedan'], ['Truck', 'Truck'], ['Coupe', 'Coupe'], ['Convertible', 'Convertible'], ['Hatchback', 'Hatchback'], ['Van', 'Van / Minivan'], ['Wagon', 'Wagon']];
+  var conds = [['', 'Any'], ['new', 'New'], ['used', 'Used'], ['cpo', 'Certified']];
+  var feats = [];
+  try { feats = selectedFeats(); } catch(e){ feats = []; }
+  side.innerHTML =
+    '<div class="dside-head"><h3>Filters</h3><button class="dside-clear" id="deskClear" type="button">Clear All</button></div>' +
+    '<div class="dside-group"><h4>Vehicle Type</h4>' + types.map(function(t){
+      var n = t[0] === '' ? pool.length : (typeCounts[t[0]] || 0);
+      return '<button class="dside-opt' + (curType === t[0] ? ' on' : '') + '" data-dtype="' + esc(t[0]) + '" type="button"><span>' + esc(t[1]) + '</span><span class="cnt">' + n + '</span></button>';
+    }).join('') + '</div>' +
+    '<div class="dside-group"><h4>Condition</h4>' + conds.map(function(t){
+      var n = t[0] === '' ? pool.length : (condCounts[t[0]] || 0);
+      return '<button class="dside-opt' + (curCond === t[0] ? ' on' : '') + '" data-dcond="' + esc(t[0]) + '" type="button"><span>' + esc(t[1]) + '</span><span class="cnt">' + n + '</span></button>';
+    }).join('') + '</div>' +
+    '<div class="dside-group"><h4>Price</h4><div class="dside-price">' + esc(budgetShort()) + '</div>' +
+    '<button class="dside-set" id="deskPriceBtn" type="button">Set price range</button></div>' +
+    '<div class="dside-group"><h4>Must-have features</h4><div class="dside-feats">' +
+      (feats.length ? feats.map(function(f){ return '<span>' + esc(f) + '</span>'; }).join('') : '<span class="none">None picked</span>') +
+    '</div></div>' +
+    '<button class="btn-ghost dside-more" id="deskMoreFilters" type="button">More Filters</button>';
+  side.querySelectorAll('[data-dtype]').forEach(function(b){
+    b.addEventListener('click', function(){
+      $('vtype').value = b.getAttribute('data-dtype');
+      syncHomeCols(); deskApplyFilters();
+    });
+  });
+  side.querySelectorAll('[data-dcond]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var v = b.getAttribute('data-dcond');
+      document.querySelectorAll('#stockChips .chip').forEach(function(c){
+        c.setAttribute('aria-pressed', c.getAttribute('data-stock') === v ? 'true' : 'false');
+      });
+      syncHomeCols(); deskApplyFilters();
+    });
+  });
+  var pb = $('deskPriceBtn');
+  if(pb) pb.addEventListener('click', function(){ openWheel({ title: 'Budget', budget: true }); });
+  var mf = $('deskMoreFilters');
+  if(mf) mf.addEventListener('click', function(){ go('prefs'); });
+  var cl = $('deskClear');
+  if(cl) cl.addEventListener('click', deskClearFilters);
+}
+function deskApplyFilters(){
+  try { readSearch(); } catch(e){}
+  buildSeedDeck(true);
+  renderDeck();
+}
+function deskClearFilters(){
+  $('vtype').value = '';
+  document.querySelectorAll('#stockChips .chip').forEach(function(c){
+    c.setAttribute('aria-pressed', c.getAttribute('data-stock') === '' ? 'true' : 'false');
+  });
+  document.querySelectorAll('#featChips .chip').forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
+  document.querySelectorAll('#transChips .chip').forEach(function(c){
+    c.setAttribute('aria-pressed', c.getAttribute('data-trans') === '' ? 'true' : 'false');
+  });
+  document.querySelectorAll('#fuelChips .chip').forEach(function(c){
+    c.setAttribute('aria-pressed', c.getAttribute('data-fuel') === '' ? 'true' : 'false');
+  });
+  document.querySelectorAll('#mpgChips .chip').forEach(function(c){
+    c.setAttribute('aria-pressed', c.getAttribute('data-mpg') === '' ? 'true' : 'false');
+  });
+  var ai = $('anything'); if(ai) ai.value = '';
+  budgetSel.min = null; budgetSel.max = null;
+  syncHomeCols();
+  deskApplyFilters();
+  toast('Filters cleared');
+}
+
+/* ----- Discover: matches grid ----- */
+function renderDeskGrid(){
+  var grid = $('deskGrid'); if(!grid) return;
+  var gated = !(profileComplete() || profileSkipped());
+  var extra = $('deskExtra');
+  if(gated){ grid.innerHTML = ''; if(extra) extra.style.display = 'none'; return; }
+  if(extra) extra.style.display = '';
+  var title = $('deskGridTitle');
+  if(title) title.textContent = ($('matchesTitle') && $('matchesTitle').textContent) || 'Your Matches';
+  var cnt = $('deskGridCount');
+  var cars = deskSortedDeck();
+  if(cnt) cnt.textContent = cars.length + (cars.length === 1 ? ' vehicle' : ' vehicles');
+  if(!cars.length){
+    grid.innerHTML = '<p class="desk-empty-note">No cars in this deck right now — widen the filters on the left and Moe will rebuild it.</p>';
+    return;
+  }
+  grid.innerHTML = cars.map(function(c){
+    var est = monthlyEst(c.price);
+    var saved = !!state.saved[c.id];
+    return '<article class="dcard" data-dopen="' + esc(c.id) + '" tabindex="0" role="button" aria-label="See details for ' + esc(c.name) + '">' +
+      photoHTML(c, 'dcard-photo') +
+      '<button class="dcard-save' + (saved ? ' on' : '') + '" data-dsave="' + esc(c.id) + '" type="button" aria-label="' + (saved ? 'Remove from Saved' : 'Save this car') + '">' + (saved ? '♥' : '♡') + '</button>' +
+      '<div class="dcard-body"><div class="dcard-name">' + esc(c.name) + '</div>' +
+      '<div class="dcard-trim">' + esc(c.trim) + '</div>' +
+      '<div class="dcard-meta">' + (c.mileage == null ? 'Mileage — see listing' : c.mileage.toLocaleString('en-US') + ' mi') + ' · ' + esc(c.dealer.name) + '</div>' +
+      '<div class="dcard-pr"><span class="dcard-price">' + money(c.price) + '</span>' +
+      (est != null ? '<span class="dcard-mo">$' + est.toLocaleString('en-US') + '/mo est.</span>' : '') + deskDealChip(c) + '</div></div></article>';
+  }).join('');
+  grid.querySelectorAll('[data-dopen]').forEach(function(card){
+    card.addEventListener('click', function(e){
+      if(e.target.closest('[data-dsave]')) return;
+      openDeskDetail(card.getAttribute('data-dopen'));
+    });
+    card.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ openDeskDetail(card.getAttribute('data-dopen')); }
+    });
+  });
+  grid.querySelectorAll('[data-dsave]').forEach(function(b){
+    b.addEventListener('click', function(e){
+      e.stopPropagation();
+      var car = allCars()[b.getAttribute('data-dsave')];
+      if(car){ toggleSave(car); renderDeskGrid(); deskCounts(); }
+    });
+  });
+}
+
+/* ----- Discover: car detail panel ----- */
+function openDeskDetail(id){
+  var car = allCars()[id]; if(!car) return;
+  deskDetailId = id;
+  var box = $('deskDetail'); if(!box) return;
+  var photos = carPhotos(car);
+  var est = monthlyEst(car.price);
+  var inCmp = state.compare.indexOf(id) > -1;
+  var saved = !!state.saved[id];
+  var mainSrc = photos.length ? photos[0] : '';
+  var mainHTML = mainSrc
+    ? '<img id="ddMainImg" class="' + (car.cutout ? 'cutout' : '') + '" src="' + esc(mainSrc) + '" alt="' + esc(car.name + ' ' + car.trim) + '">'
+    : photoHTML(car, '');
+  var thumbs = photos.length > 1 ? '<div class="dd-thumbs">' + photos.map(function(p, i){
+    return '<button class="dd-thumb' + (i === 0 ? ' on' : '') + '" data-dthumb="' + i + '" data-dsrc="' + esc(p) + '" type="button" aria-label="Photo ' + (i + 1) + ' of ' + photos.length + '"><img src="' + esc(p) + '" alt=""></button>';
+  }).join('') + '</div>' : '';
+  var meta = '';
+  meta += '<div><span>Mileage</span><b>' + (car.mileage == null ? 'See listing' : car.mileage.toLocaleString('en-US') + ' mi') + '</b></div>';
+  meta += '<div><span>Drivetrain</span><b>' + esc(car.drivetrain || 'See listing') + '</b></div>';
+  if(car.transmission) meta += '<div><span>Transmission</span><b>' + esc(car.transmission) + '</b></div>';
+  meta += '<div><span>Fuel economy</span><b>' + (typeof car.fuelEconomy === 'number' ? Math.round(car.fuelEconomy) + ' ' + (car.mpgUnit || 'MPG') : 'See listing') + '</b></div>';
+  if(car.color) meta += '<div><span>Exterior</span><b>' + esc(car.color) + '</b></div>';
+  meta += '<div><span>Condition</span><b>' + (car.stockType === 'new' ? 'New' : car.stockType === 'cpo' ? 'Certified' : 'Used') + '</b></div>';
+  meta += '<div><span>VIN</span><b>' + esc(car.id) + '</b></div>';
+  box.innerHTML =
+    '<button class="dd-back" id="ddBack" type="button">← Back to matches</button>' +
+    '<div class="dd-grid"><div class="dd-media"><button class="dd-main" id="ddMainBtn" type="button" aria-label="Open the listing for ' + esc(car.name) + '">' + mainHTML + '</button>' + thumbs + '</div>' +
+    '<div class="dd-info"><h3>' + esc(car.name) + '</h3>' +
+    '<div class="dd-trim">' + esc(car.trim) + '</div>' +
+    '<div class="dd-dealer">' + esc(car.dealer.name) + (car.dealer.city ? ' · ' + esc(car.dealer.city) : '') + '</div>' +
+    '<div class="dd-pricerow"><span class="dd-price">' + money(car.price) + '</span>' +
+    (est != null ? '<span class="dd-mo">$' + est.toLocaleString('en-US') + '/mo est.</span>' : '') + deskDealChip(car) + '</div>' +
+    deskFeatStrip(car) +
+    (car.features && car.features.length ? '<div class="dd-feats">' + car.features.map(function(f){ return '<span>' + esc(f) + '</span>'; }).join('') + '</div>' : '') +
+    '<div class="dd-meta">' + meta + '</div>' +
+    '<button class="dd-ask" id="ddAsk" type="button">' + (askedDealFor(id) ? 'Numbers requested — view deal' : 'Have Moe ask for numbers') + '</button>' +
+    '<div class="dd-row"><button class="btn-ghost" id="ddCompare" type="button">' + (inCmp ? '✓ In Compare' : 'Compare') + '</button>' +
+    '<button class="btn-ghost" id="ddSave" type="button">' + (saved ? '♥ Saved' : '♡ Save') + '</button></div>' +
+    '<div class="dd-view">' + viewLink(car, '') + '</div>' +
+    '</div></div>';
+  box.hidden = false;
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('ddBack').addEventListener('click', function(){ box.hidden = true; deskDetailId = null; });
+  var mb = $('ddMainBtn');
+  if(mb) mb.addEventListener('click', function(){
+    var u = safeUrl(car.url);
+    if(u) window.open(u, '_blank', 'noopener');
+    else toast('No direct link in the Nov 25 snapshot for this car — it opens in the live feed');
+  });
+  box.querySelectorAll('[data-dthumb]').forEach(function(t){
+    t.addEventListener('click', function(){
+      var img = $('ddMainImg'); if(img) img.src = t.getAttribute('data-dsrc');
+      box.querySelectorAll('[data-dthumb]').forEach(function(x){ x.classList.toggle('on', x === t); });
+    });
+  });
+  $('ddAsk').addEventListener('click', function(){ startAskNumbers(car); });
+  $('ddCompare').addEventListener('click', function(){
+    if(state.compare.indexOf(id) > -1) state.compare = state.compare.filter(function(x){ return x !== id; });
+    else { state.compare.push(id); if(state.compare.length > 2) state.compare.shift(); }
+    renderCompare(); openDeskDetail(id);
+  });
+  $('ddSave').addEventListener('click', function(){
+    toggleSave(car); openDeskDetail(id); renderDeskGrid(); deskCounts();
+  });
+}
+
+/* ----- Saved sidebar counts ----- */
+function deskCounts(){
+  var n = state.savedOrder.length;
+  var b = $('deskSavedBdg');
+  if(b){ b.style.display = n ? 'inline-flex' : 'none'; b.textContent = n; }
+  var a1 = $('deskSavedAll'); if(a1) a1.textContent = n;
+  var a2 = $('deskSavedCars'); if(a2) a2.textContent = n;
+  var a3 = $('deskSavedCmp'); if(a3) a3.textContent = state.compare.length;
+  var nb = document.querySelectorAll('.desknav-links button');
+  var tabFor = { home: 'discover', prefs: 'discover', discover: 'discover', agent: 'discover', saved: 'saved', compare: 'compare', more: 'more', privacy: 'more', terms: 'more' };
+  nb.forEach(function(x){ x.classList.toggle('active', x.getAttribute('data-dnav') === tabFor[state.view]); });
+}
+
+/* ----- Compare (desktop, up to 3, saved cars only) ----- */
+function renderDeskCompare(){
+  var box = $('deskCompare'); if(!box) return;
+  var map = allCars();
+  deskCmp = deskCmp.filter(function(id){ return state.savedOrder.indexOf(id) > -1 && map[id]; });
+  if(!deskCmp.length) deskCmp = state.compare.slice(0, 3).filter(function(id){ return state.savedOrder.indexOf(id) > -1; });
+  if(!state.savedOrder.length){
+    box.innerHTML = '<div class="dcmp-head"><h3>Compare Vehicles</h3></div>' +
+      '<div class="dcmp-empty"><p>You haven&rsquo;t saved any cars yet — go swipe first. Compare only ever shows cars you saved.</p>' +
+      '<button class="btn-grad" id="dcmpGo" type="button">Go to Discover</button></div>';
+    var g = $('dcmpGo');
+    if(g) g.addEventListener('click', function(){ if(!state.deck.length) buildSeedDeck(true); go('discover'); });
+    return;
+  }
+  var cars = deskCmp.map(function(id){ return map[id]; });
+  var cols = cars.map(function(c){
+    return '<div class="dcmp-car">' + photoHTML(c, '') +
+      '<button class="dcmp-rm" data-dcrm="' + esc(c.id) + '" type="button" aria-label="Remove ' + esc(c.name) + ' from Compare">✕</button>' +
+      '<div class="ci"><div class="cn">' + esc(c.name) + '</div><div class="ct">' + esc(c.trim) + '</div><div class="cp">' + money(c.price) + '</div></div></div>';
+  });
+  var remaining = state.savedOrder.filter(function(id){ return deskCmp.indexOf(id) < 0; });
+  if(deskCmp.length < 3){
+    cols.push('<div class="dcmp-add"><h4>Add Vehicle</h4>' +
+      (remaining.length ? remaining.map(function(id){
+        var c = map[id];
+        return '<button data-dcadd="' + esc(id) + '" type="button">' + esc(c.name) + ' — ' + esc(c.trim) + '<small>' + money(c.price) + '</small></button>';
+      }).join('') : '<p style="margin:0;font-size:13.5px;color:var(--muted);line-height:1.5;">Every saved car is already in Compare.</p>') +
+      '</div>');
+  }
+  var html = '<div class="dcmp-head"><h3>Compare Vehicles</h3><span class="dcount" style="font-size:13.5px;font-weight:600;color:var(--muted);">From your Saved cars only</span></div>' +
+    '<div class="dcmp-cols" style="grid-template-columns:repeat(' + cols.length + ',minmax(0,1fr));">' + cols.join('') + '</div>';
+  if(cars.length){
+    function drow(label, vals){
+      return '<tr><th>' + label + '</th>' + vals.map(function(v){ return '<td>' + v + '</td>'; }).join('') + '</tr>';
+    }
+    html += '<table class="cmp">' +
+      drow('Price', cars.map(function(c){ return money(c.price); })) +
+      drow('Monthly est.', cars.map(function(c){ var e = monthlyEst(c.price); return e != null ? '$' + e.toLocaleString('en-US') + '/mo' : '—'; })) +
+      drow('Drivetrain', cars.map(function(c){ return esc(c.drivetrain || 'See listing'); })) +
+      drow('MPG', cars.map(function(c){ return typeof c.fuelEconomy === 'number' ? Math.round(c.fuelEconomy) + ' MPG' : 'See listing'; })) +
+      drow('Seating', cars.map(function(c){ return c.features.indexOf('3rd Row') > -1 ? '3rd row' : 'See listing'; })) +
+      drow('Heated Seats', cars.map(function(c){ return c.features.indexOf('Heated Seats') > -1 ? '✓' : '—'; })) +
+      drow('Navigation', cars.map(function(){ return 'See listing'; })) +
+      '</table>';
+  } else {
+    html += '<p style="font-size:14px;color:var(--muted);line-height:1.55;">Add up to three of your saved cars and they line up side by side here.</p>';
+  }
+  box.innerHTML = html;
+  box.querySelectorAll('[data-dcrm]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id = b.getAttribute('data-dcrm');
+      deskCmp = deskCmp.filter(function(x){ return x !== id; });
+      state.compare = deskCmp.slice(0, 2); renderCompare();
+      renderDeskCompare(); deskCounts();
+    });
+  });
+  box.querySelectorAll('[data-dcadd]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id = b.getAttribute('data-dcadd');
+      if(deskCmp.length < 3 && deskCmp.indexOf(id) < 0) deskCmp.push(id);
+      state.compare = deskCmp.slice(0, 2); renderCompare();
+      renderDeskCompare(); deskCounts();
+    });
+  });
+}
+
+/* ----- Garage side nav ----- */
+function deskYouScroll(kind){
+  var view = $('view-more'); if(!view) return;
+  var target = null;
+  if(kind === 'overview'){ view.scrollTop = 0; return; }
+  if(kind === 'documents') target = $('youDeals');
+  if(kind === 'settings') target = $('youAccountCard');
+  if(kind === 'preferences' || kind === 'tradein'){
+    var want = kind === 'preferences' ? 'My Car Preferences' : 'Your Trade-In';
+    $('youProfile').querySelectorAll('.ycard').forEach(function(card){
+      var h = card.querySelector('h3');
+      if(h && h.textContent.indexOf(want) > -1) target = card;
+    });
+  }
+  if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ----- Master desktop render + wiring ----- */
+function renderDesktop(){
+  try { deskCounts(); } catch(e){}
+  try { renderDeskSide(); } catch(e){}
+  try { renderDeskGrid(); } catch(e){}
+  if(state.view === 'compare'){ try { renderDeskCompare(); } catch(e){} }
+}
+var _goDesktop = go;
+go = function(view){
+  _goDesktop(view);
+  renderDesktop();
+};
+var _renderDeckDesktop = renderDeck;
+renderDeck = function(){
+  _renderDeckDesktop();
+  try { renderDeskSide(); } catch(e){}
+  try { renderDeskGrid(); } catch(e){}
+  if(deskDetailId && !$('deskDetail').hidden){
+    if(!allCars()[deskDetailId]){ $('deskDetail').hidden = true; deskDetailId = null; }
+  }
+};
+var _renderSavedDesktop = renderSaved;
+renderSaved = function(){
+  _renderSavedDesktop();
+  try { deskCounts(); } catch(e){}
+};
+document.querySelectorAll('[data-dnav]').forEach(function(b){
+  b.addEventListener('click', function(){ go(b.getAttribute('data-dnav')); });
+});
+var _deskBrand = $('deskBrand');
+if(_deskBrand) _deskBrand.addEventListener('click', function(){ go('home'); var v = $('view-home'); if(v) v.scrollTop = 0; });
+var _deskBell = $('deskBell');
+if(_deskBell) _deskBell.addEventListener('click', function(){ toast('You\u2019re all caught up \u2014 no new notifications yet.'); });
+var _deskMoe = $('deskMoeBtn');
+if(_deskMoe) _deskMoe.addEventListener('click', openMoeSheet);
+function deskDoSearch(){
+  var inp = $('deskSearch'); if(!inp) return;
+  var q = inp.value.trim();
+  var ai = $('anything'); if(ai) ai.value = q;
+  if(q){ try { readSearch(); buildSeedDeck(true); renderDeck(); } catch(e){} }
+  go('discover');
+}
+var _deskSearchBtn = $('deskSearchBtn');
+if(_deskSearchBtn) _deskSearchBtn.addEventListener('click', deskDoSearch);
+var _deskSearchInp = $('deskSearch');
+if(_deskSearchInp) _deskSearchInp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); deskDoSearch(); } });
+var _deskSort = $('deskSort');
+if(_deskSort) _deskSort.addEventListener('change', function(){ deskSort = _deskSort.value; renderDeskGrid(); });
+document.querySelectorAll('[data-dsaved]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var k = b.getAttribute('data-dsaved');
+    document.querySelectorAll('[data-dsaved]').forEach(function(x){ x.classList.toggle('on', x === b); });
+    if(k === 'compare'){ go('compare'); return; }
+    if(k === 'searches'){ toast('No saved searches yet — your filters live on Home.'); return; }
+    var v = $('view-saved'); if(v) v.scrollTop = 0;
+  });
+});
+document.querySelectorAll('[data-dgarage]').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('[data-dgarage]').forEach(function(x){ x.classList.toggle('on', x === b); });
+    deskYouScroll(b.getAttribute('data-dgarage'));
+  });
+});
+/* The desktop Budget wheel writes budgetSel through setBudget, which
+   repaints the Home columns only — repaint the desktop sidebar and
+   matches too whenever the wheel closes on Done. */
+var _wheelDoneDesktop = $('wheelDone');
+if(_wheelDoneDesktop) _wheelDoneDesktop.addEventListener('click', function(){
+  setTimeout(function(){ try { renderDeskSide(); } catch(e){} }, 60);
+});
+renderDesktop();
+
 </script>
 </body>
 </html>
