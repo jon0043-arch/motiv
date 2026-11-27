@@ -46,13 +46,12 @@
   .bars i{display:block;width:11px;height:30px;border-radius:4px;background:linear-gradient(180deg,#7dc8ff,#2f9cf2 60%,#35b9fa);}
   .bars i:last-child{height:30px;opacity:.92;}
   .bars.sm i{width:8px;height:21px;border-radius:3px;}
-  /* Wordmark face — measured, not named (Nov 27, 2026): the file at
-     this path is Fontfabric Nexa HEAVY Italic. Genuine Nexa Bold
-     Italic measures an M stem of 0.17 x cap height; Jon's reference
-     logo measures 0.24-0.25, so genuine Bold renders LIGHT next to
-     it. Heavy Italic measures 0.223 with the reference's small
-     counters (o counter 0.51 x x-height vs the reference's 0.46) —
-     the genuine weight that matches the reference's thickness. */
+  /* Wordmark face (Nov 27, 2026): the file at this path is genuine
+     Fontfabric Nexa BOLD Italic — name table "Nexa Bold Italic",
+     OS/2 usWeightClass 700, subset to the same 202 glyphs as before.
+     Jon chose true Bold knowing it renders lighter than the earlier
+     Heavy Italic (OS/2 900) and his reference logo. Nexa is used
+     ONLY for this wordmark; everything else is Inter. */
   @font-face{font-family:'NexaWord';font-style:italic;font-weight:700;font-display:swap;src:url(data:application/octet-stream;base64,d09GMgABAAAAACTAAA4AAAAATZgAACRrAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbIBwgBmAAgQQRCAqBhGzlQQE2AiQDhiwLgxgABCAFhxoHIBtiO0VGho0DAAXZCrL/y+RN5QseRCUqG9FIDNuGgxRFM5vfkojqoasPN7W2ayJqvVjI+DC7feIjJJmF+Ofez5m5n7aUwnsWPK2ARyjxZjm+QiH7FgomIAF9Q7DNzki0AVFAMMAgRCxClEgFBMUKUgW0MQOrN3Mu3qUL51Knv+qv3D5r+6pR4O6qeUsl4gQkfi1lGtA92LI5VCDa1jIGHLAPYIMF8gFwX03ztdcqaX3RopRnJxNCqJ4aq7Ues/Iy+YDe/3SxrqMPZJQRoHs68H+q6gqITuJSNz1P1MCU0cOmZPLqDKuX5XQHGbj7JHWABIsg1Qohpqg2gKAfxFCpfax1BFVsk2lMqXVy5lb62vcpY7xmmLdkmaoR02MF6qoN4FhIxHfnNWY2pLVrk5i84RpygNQF7KDfd4MAtkSMsNFw//XqAjZAEYjNqytVAWfsAbC8qJQaKfuUvvo4APo5c3TwY9HNT6iG1zJ5DbMqRznevEjnARuw98G2P+ZYKf4zIhU5wv/zCsDdpaGY6NEONsUqe6qNM7yerqozHaxzjhdYKDYAG4gNxuKx65dXul3WHQc4xYW7gUVgUVjsyau4/FteXnaXnb/HHXHYmoPQHx0V62hd6/LCDFh/p09R+LLw8KN+9UCuuKKENjEbHN5tkdu2EG2ZHaWMSWXIDiVjlCkdbgjJTpyV1TlbOhstfHaivf0LOU3td7CnIhuCW1jlwkpOZ3PSZXNN7sM2mJOrPbAj1EntIyBmYRYCJ/gluNGHfWVhzomUw9VTXJ+fU3nMc1ppnxzos5380Nbu6Tiy3oVoSRJz4z1WFn+yqaXGYDCHDLLsWbrOfNJFdyRcNt4XVsr1pnmpF+EJ7114csn98aT+Rc235NGrCZXsVCiO4zvpBA0prhrX6IrD8RMSPLW1bAUXqsIrnZR1/Zp9mafZUrljDg0lsSuQLSpxKdA8WJhy5z5hRJTi34Oy5d4sUkDU8ybJU1e5xkxM+ZHbdXZsQiWamtO0yZ17A34hvHDhwlrjXF25Z2v/Fhg60PprMnOJ2eVQtQJ/5YDKWOIhIS8hWAK8mJGK+Y6posYAfBVv0mJb63NdoBQRcBDY3Kwxayxj98wsFzsw0NjSGjOGGUl7WS3hooMrGVOCf4Y/4RHhL6Xifsyurj1QuTLlK0HPv3uZz0j1wy/RVnAfvcYz75FLY9aumqA1eH6rLYoRMsBIC5Wpgtit/uqy1qEU24ZNkCL7LvA4wUgsSFqILWuoHlNRmHfHaj3F7DJzhCxQxLOVHt4dRkpnDbOxu4q4Vo2UKrMCoyQuSyJJuB8cStif2lu6edNErhrriO8bTX7rySWaEq6Z5dwG+ASGuMD74339tAr7QcDYpK06e+hbTjx0FBseZoFcRWGSJrThWwThtkpjAgj/aklaFUPOoUm32C2sRdfmwqyx6p6poEkjeGHOo1Tw4FynTkFxq/lsQS6rAvNcmH0Tk9XHZHox1ZbxEvCECm16ASlCQh5K+Eox1QMHzwHnluWsXF0/VL8WBe4Zibl5il2pmyD7RpkAnpZGxn66CtFi4d/X8tbqB9v3Nr++lAATcUCnOfVw31C86MR1i72DOei1AH6Vr2QfhIWGpIHVnuT3Hc6A+p184fy/BndVZKSu7/xqXuTZYQIP7yQSjiTMXl7JrEDis2kBSiNCGIXoKBD+HfeooI1oiDbpdbM3uhEPRMKuU+LoxMHJ9ju6an7lPApTJHIEifQjVkUDsaRVtzP2YAaOOKHDgslt9t+ADDvgohORiIgcUzI0ltXKhhF/rwqVF0YhQVZSsXcyQuHfyPI9XiiNh1fBjEmoJIJQurORRkGiWPJWlUfmrwQHytU/D9LVJMimPdHvomBT1VACWGHDFFIhJrSGoBep4F0ejojoib0TleRmPnSB8wiSVehEq8rywTUzQzj9PRThHe9dTTg9F4LsXsicYoxamc0muJFK3EC3UB4iDsh05V3Oo/IIXeWUCKcjBEl08W8gwiyBR6TUwMLQFYU0J3fMJ6KQslD9RGANqeeVaYKY3AhCwZBD3FFfiU4DarefhjK/4xtxgTAc+DB16b4Sk2A5LSp+F25jB/pKuLGyGLthbo8GwKebSOCABMYYvUHEDLz57ITtl2PTfm9ax4p01G9ZYIGrFKXXWGf0jSsgkOBgUVu6zOe7VojmjTHsQrJtzz0lDfEJxigJGAe5mIQISKPUs/ioYUhduvkW2z/XnOnEKTkLO+J7Y4ERWRJmEEjAhkgCwVVWMh19rgLYyHFfcKLzCpDQmM+hxHs/om/QgA1xB1K0AjPMharF9PaxjqsLOZ9nyuKs24HbK13utRWluj0k9t5XQadhGD1x3DYWY05gZfssBTOWQwJTgF9Vm3pNiDhaSmIh28gxGkgJE4E1zJDDEjajjFA5UthKQQnJKTyXGQDOLuZibIygmaU4td0cer+mu2a7ag019f+vD1FTv3cX0sTbi/lcl7t9KOt6b9T21NY21uYyrTe4deB5NpqovrofyZ+rv0lKpYRS708Fz089bU+aj2b1A9OE5lcGnpiJo1qWy8TZNFuWkym17h0aicDhqepbSNCknm8HfXeNBYyN3RYg2oj7fStey0Q2B/wtvzN7y/cCC9L0Dn07BT4zXtQtcQOF4PbWggQFUxCTmQGG9bJ5WaO5kqGpIJjIz22+dDDMdjxBJ/bOFLyF7Pb2/HJ7vP7s+cmqKZU5ePF03b42kSge1ZdlTqPSkh+AM4gvtJfgRH/tEY4pgcLYhMZ5+ehAft/e7a7nyT+K18/nf2r00cZyjpBkvEL6GeCCCo3H0Tftd/bspek4AXCQUSQwe6vh/v8DyHqlwZUMdcwdLianI26b5kCSkwfmoCrojPWtrCm1dxMpzK2XZndxLp7ZckHJQt2HOzfJxsfdw6Jse1vgBxb+vxuzRvOi0ejhJUEGdsCGZ9yTHQTc0fNKCu5/YTqWG5i5/1HGp7d1fEx9OBOo0fV9ZgeJ3VS7YwqnwoJwNHreEwRsh+AD/qT3lgvAAmamYqjC3wuYKrAMS4wqkpvrjWUytbU94HdFqbSx+20DdQcNNyd3oAqd+jQvO55rH+6M7UYhKP1Gx3K5wd7DG4ahaejhLjW3NBZXGv8xKUtD91y/E1gE3yPLQoBr8h5zz/I3Pz+xTOUv1DaiZn82JpRdu9DT01fVUTMMpZ0Xozsg4souOGgHtiLpx+sfqcFsfu7R2jSF82K9KpIl9y1FFtygA5MmyA5CajpJvCYUPR6yNEFGIJmVyOMwR3aJq+onSq/sDuWVzYooTozY3QJOGMDmm0B0oYwb/gozD3fa+tJM7woUaV0ym6mVSK0C22pJKhg7t32+u7v33lGaAT+ocaB05uBAtqICqZojQjihriPO6YtUcMQnk0qf95KCBYklguFlP7GRc01X8D39VEv+ZEkHtNjl03J1jPekelKYYJGVFEiVlBMB9KACRRYmv5atS7bK5Ad950wlIFrooEzdAPYtc73URWhSpDyVWf73Rp8cAZEzsent2cHBXK5u+MTddrDV+uHOx3Nx9ZMZ4ho2QouGrur97XBPx8+SgolUqqkxgMDBCZ41TxVMVyEaIsULSCmUSoWwtDrohW9SS52GqD8VkW67TZTmlIwqb/tk6q/054Z+cbE1HW7WiZxmFzD6gLTxoJXqHET/Nn87RwJbV8DvE+wSx6GPCUUPTy833VycZYog3ezsnORgZ0h2rdu1382wZFTIJPVJiTsg0eNvJlECRmBhO7xeMQ+uXOJKpved+Fz/ezbM2LuaNyYCmzXoVmceaJ9XskrvT+luwY4yTalzuURSyTX/3IRKPAdXVUcEuZM54mw7XViyZzc/Z5LkflJJES53tHUE38t/8W1guqYX3kOiJQvn5ltc6zymv53ISqHHfcHcqJlQArWpD30Ouf0xOdT2q0wSU0QZR3Ie+pYEjXUH+bDEJHhVYNUyObkXzhvS6AzaBeYwBU9enkmi9wKe6UfzyEswezASMZYhwEN4CHhKXioBl/IvbwB3bval23J3JmVlnBljdRu9cQ234I5XqAd8fmZ9tPr/IeTj+kR7SaRoYKuD1QThkSjXq/nD7UMg/72Uc3DJ/Wo2g6kp9aP8HhHUH0xhx0dg5kD/Vm+UR+9vHv1RwQMIt63JcxXsuf7eW+xbp5efT4PWG2lWKwiVQj+V5o9j2YUM39rKR8YO1a0OsMXvo01kkGmMXEJzmQjDc7SXeqYFAXhaj5d6orYR4lk05FmY49xV4p0ymvS4jJUkzw6dc1cc8KhR3fEv7L708CYz0qtgsUzv5J7eB96z3sD7ZYFIThObanJxkYw+fsd+hb+9msjgH1sklP+9VwtK0Tn+0GE4Bo+EGqsHMOIA6IgfJgEJbQVCAiclAU8UBkf5nb6a7iYe9sxlfO2IXLioiBCLSiZ0vcoivkzDQxJCRThquPJnVbDSPbyqS+1qnHDghV9lS+PIXI0Q2gD6L/VEefQA+IxDvKZK0fbzwMva4pySA81/7JwPB4oDORoZK/t2o4L1RbJusyvydx8j+RaoeSWbHqESZgmZKeJMKCE3HetaUBpQoA12zS/0AQzrsP9En9r1GKx9DDHRV/gwWE/1C6Jkd8qCSkU9GY1BqGoQ9QWsrTHcEWCddCAMXYclbuDRtWDjxdhpb/oo+GQSqvPK4RWMlhV45TyEzP9kCETleTtXvPT+Sw8PDVqn1/wXvHT+8w+O9PQvHgK28M52TrMl2G/Ap0DLrIR3gp+/2+NfvVFabxouzgc81BwWUZRyCDER71uzAOFyi0qiNL50agau3XgqMVZFACq8Cd6h7nTjF34sqEPwlnwk5epWnFg7mZWXyC7SD4aWSZnnPMW1kcJyZ9kKiRMRD7+Q7opBuoKPtpak5xV+VgWsYwHWYfFYXUJ8SvgTWLf8Rup9Kjrbe/Vu7YWcgmKqzi+2d8Doa5kvEeDifY+GugcRRCEEN7qkF/z6nrssXYGilffri0UMsybJguHQ1QGp8cFFJwm/Q+tebm3uGNJ5VE07i/Dx9HyGcIRXyLJz/p8uKky0d+GSwOPTDaQUxJivkxSoCck55EbNkDwtlcbL5pL75DpRVs08uvBn/6z1krrGoYLshKSczNfwKfhMXeNybDFIMiDl8ZjC54qQ5QSGJLqv2sqW8JLBk8/cFBK1O7Ifd5G/w5pvWNo7R/UeldNOqaEJrKIYyQQvnxUbwSbTRQWJcRF8MmASJsNQakzkweDAbmoSYT8OrcYQDoSia8F5qUdV6hoSJwvR1E3TVIPVdSgVPxXyHq1pskJz9Zkj7FmqBgR3wju3tH/yW3jXlicIXj0537RQkXftGXz6Nw586ZT46iN/Z8XH13ZojozfV0I/dDS0F9vIbfDCfTmxJbfwvkuOrcbEd75sX9v2Rb94VANbiuZkfuUpc9veVotCgvdXFFHLpx8eX63IuThhOcPOf+nu0dXpkS1jSIbLbn4YpqjBUlB99IRFYxP1fp4HU0l+YcHsFnWXtX3ngji9mBVVES/OKOKSW4AQ3Vgqajx1bvv47vZnNvzAE4Hg6wjUgauMawTs56RxV8TgLomLQZBDOdbcohplWmNz7OEICyv20Cd6EH9VZmo2rK2sHulW0OdNHSelppk8U03R16WV1iGP7H4vmVyBpxENoWBuGzMzva9NHjVR3LwmNmH+JUv29cergnBBfDc2VijLywTiCcQEDFqnfN233gkxXulnzfUbzEWMgovLLVv/I8Y1qDUpYlgK3io1a1fSMcSGuVnQHPxtmRxLU4kpvlVH4N3kOEp1942MtmhhVnAZi4dtE1XrM+YouUfAEFikQOkU6HLL9jLFj07xWwQXllq2l4BX8Awkgy+Ry3RZ7gqS/TW/oSLhhP/UxuGDTPDOtn1e5t85iCuPImMjmTpRsUgsmMMroCYWIcb/Bq0g80snT9SqX9aPTKfNZbd/3DbAAyC3vW6jPgj/diUNsbq9HPwF7r19RB7qJ6vXXnxjdv3A6PUXu/ontP+ht9rQpataWTKr9GXZ+ukO4BcW+voplkgcjfchs9Sngm8tt2ynVNdbClqOHQPUawdXje1cZZeJn1VEqps7sTp287/vb84eX93/2FujbdfXLM1XqQz6bP1MNxiCII8PfVEf/sVyy7bUVFubVaxpLQ8J45wJeXCWxhFG4s6D+rqyQpMSSWQoKeE4LkrgwHHQ4HhZyXnqhqmoQpAFplgMbf1TE5kuyIohhWxwnPZkIiQUtGrIW7NpqlcYI8GGhvIWYliAGH5LQwEVW0t8K3Jx99iUqBIvk6I6PJRlWe/hVSguyrST2RVo3DYJqGevzO8eObJ7utweYw9EwVeatroU1resXUNbp4k/wj/58VWD8lXtx20/gYb795+dc6QWXEy3P9n81Y2vdu2phRtKxxPg9+0G2Cewi04lKxTYMgV2fcUJlMTB+/0gvJe+yPGforgrTnwOft0ALjdqAayltirkAWUvJsJm+jh4ZQPAWp8RVSAAZBGMUp1xsdJ5wfDa8ddAQhOs7T31/y2gYdPhKGXEsQO8eu7rAQ8lXeKu7CHdKAyZVIP6au3wuaNdNuQUXFdOcr5KQL0UzcnLo1NobKCxsEoUwjh2NIWtzE6KynHnT5Gc+QJNcWWVuu/oeoeRKE7qBu37JIW5qfWGTmNpUcHYhCCjJo5XnOeWkJyv5FHukANuAIYlOT2TTaZHJxeKU6hs2iR/qmWrO1AgMhVV1BQPHDvaqSEIgPsdk8OrjIx4dm6WeLi2uU7bd+r4UG/l6mDEt3GXKERBBPj9cLz5RoTQPVU6BG0aSjZNJpuyoU3Z0qDb99mA28LOU4moFyhKoqAAghE4OGZcmACPyXGZ8YsQPkNYZlMC6uu0o+eOdNmQRfhHX42o/oI1v9TYUdGjA73bU2RXDl99K+J7svMk2alnLyFKkjxP+GsS/PTjZNaPk0QN8SAe3YMlHGS/2gt0GaGWvgKHtBBWvgs733Ey37Vr8cR94nQYug5DPItHa0Dv1qRgfPPqccSTTw//FnBs8F3cu5Ogf2uiZWsCvDVOdvY2qSJOt5GdJrN+6KBRufllfvlT6ZEJEV/AIHku/Cj3KbJrd1/6lVbw/xTJ3rfWAFJE3cT/x7N+6CkSS7U2jyN/AX+6mpotJV3nTw6bWppKujaPWzpF8nwmKSlWoCiik1ggrsHl65lWTLXdTtPg4V0giqkoaMmJDhNB9Fey+HurA5OjEi2n1XxNjJYm9hHBJHhrOyt3k4cfgoVwbCb/e9Wf2+nKbSmq7M3MSNN/p7bx+ssvRGorsTWy+YkSlTEkqQ4c1E15+g21Qxs7sJddObSQE5BGribbTpXnY8ZezoE25oDcH4w1HdgCqcFuFzwH39FQB7MOGs6tEZ7ta322CiZ+qMEzYqrK7h/weDZB+L3n98nCZwew9yFVIKCobGzd/t7z9p9tj4qmqqdO2r75V8O39odB9g+ThH/6sNxoqkLSQ/h9IvcfaNNKS5neorHTDDi2kCJSmT1ukhEJnJWT3QetA6ofOiEC2+D34H0H1j1irgEvom91LdSc61XoP+sVdBHtU46mbccixrx1gwWVUB/z0aud8P6Tk9i0g8632zPtoOF2Rbbw7s55gPvPhScejl8sEL7qWxUT0QnvtpPDc0RTl/7JvrEZdmUgBB7hqLCF97f/84VvdQO0rMBbhxjjv/3kP+tVOJoLnvSUBqL4hSnqrkoJpfvzwqDlYtkn+8s5qmzge27JPS2O55Exe3kyip0QgVkLiebEEgKtYGJWqO/J83FP7XOXSWCZRmXlwEoN2k3a55bK97ypzrnBp6tzk6P/I3FB4IaP/21Y23FdZBq8GTEajRjDUtl3C2FtAhzKcnBxoLqiFlo2YA4jUyUSgH8zPokbh1sMj+ZxYnEP+UVcRq6Jm+CTlZCb0mX+5iGF2CFkZpt5NGhedPY7beXObfEkUK33Me5Z2ONjLFpmOZ1JGqNNVk5Yxjed4KwCH+Pehb1jxFu/ELZB8KlqmlMz/fT0NLt2GkAUebk0OSa22yYGV2HzTOUlCP5/wfylmSqMYUgKcQWe5KSGsPc1QudMoEhFIMONGNWDfipHMeqA4mEgoi6uoACb7h4ubaUOJPvdOYOVo5Hw+WybHH9wopm4H4/iYgine86xs5GX8chsG8fp8YEa8OOrs6tr1ovPfr85e+TowJn//mJPSIpUonwpO4FXEhXqGBonoFFIOzKOPEs90iGr0jY2lY4cOzumraorHTy3CQpn39bTuGVJAQ8DE9OEXHWdMQfzV4YwJMkJEhgQ02lM+xIy7KU2e6lBYPjGkwWbjafio2sL5U+TuHhna58ugi97I39phrVioY0g4Rizi45zYz/5Jvpwcnmpjyky3JTgJUARWJ0X3IQmg5qrL3/3670nydk//xhZttXUNZWOnDprP2qrMdWVTp85A+aF0IZSaAN43hTcHABd9w8aDICtQ6RMFic6sbBIymCxKaz8YsBO8LOOIsa3+JOOgf86EdZ+9KkJbg5q1jRJzCRJLJXyHR8ucKdiX/EqJnsVl3E5Pt+v+UJPY8CX/gz3lPikMKS3eiV3j46eGJ8WF538rtCCwIUunghiZTHnyz3W4f46KAa0XnYYHe1w1IyAd8Ks/6wIJqwuRF1YDslEMpcmiPHZv/rPZFIIHg8gOoD8WwSmL5jyS2RgH/A9K0hIvsbZqVncn3oxprh08lOc9IlDCaWnho0D1B6PrKTAE3keGfvCqCi2Rxbwfc9Lowve89OiTDG/pNVYJM4QYqEt5lRdCCscFYUMLsajk8AZZ+2TjSeL0KR9ahOz8i3cnqC4pgf/hOSRRVovWb/lmnkXwNqa2kizTbY3W5abPbOT0MeNHhmrYdHIZB8Bd22o1bdaVlr8J/I9VPsWotgHDRc6bc/47tyfs0dk8PGPCRBRDKZcYOuU0xjn7n9sIrtPE0+PlcZQ/J9bcTwouzqZz0ijWXV3QxHB3hjkr82O91osSs0OAhSZuPDOxw+apQ7fcLVZPELwP2xMdGxd8sXfkvMJ5q14OyBvKzY4Jsx6XGfKwMMa6eJDu9vH/adEjf8frX0+0h+yZOjpenkwtXXEfrRZMmbPsRD1T6nRouoc+PRH+H8VBHGjEr1ZHtLZXhGHDhLTKZ/csDp3viGNHc2nxcglpN1LhzGNxamNJzcvtdIffIJuhqU56cnGKPnQG6Rffqp9D0b+7In2Pog5M+w3tOBjfqo0XwjaPu838B9i4nt47/cBc46mcep/YOm+gPqHEvJfc7rDjpCzG33q9tWkMRfM7euy8plcU23JXzp2aXSSDJtHTM0pKyGWhZJkxDNq3sHn0xDhk+RWSktosq/L/wVRodSUthwfQedKZVVxkiAZktaGfjbjSidn6xG9U3A6efVyz6BH7sOj2IERJ3eebGvn2MEjOegQLT5QvSTQ37gvnyExHflQmvR8IPlrok07LZ145muWnO77uYjagdZ4fYai/EYBXNGwNjkV67Ln4HKHMmGm3HJUUO4SjZ7zn6k3dtT7lPvo8w1l9QGLHbC2ZcO7/ztMRaysocDvLGg5VHUokyztyMLcyCi9PjOjqPJdMgNXVEarbLaSVMTf1umlUVyfrbjKLOZVupf0sPesTJ3y2X70HUXPmP3sseY99mq8+3/llBaTaimAnwXGmc4ZFTm1PRNzg1u2MSPp0Bk74/tX/os/8nLKcsQ55sLUvFKVJNeQK80vzRJmgw/us16nCfeUW0ND9noo3QScdkPpPCtPeSRROlc1xpX2yxjzxrajMnuZsbnDO9enBM8OrXOsuZqkpTKVmKIo2q0g8y+Lmo2fZzZYdXr7HB14gWbimXZVJEAFebwMVIdMWokXTe0eQy6G5UCcetXngj8K0rpH7WcWmmft7w/duhtMvSvWGmBnnK7PnISS+ovYNxv24691a9Gn6vAUrZicFqIL0WviRPi8Nd9a2RXs7pqM9qPRxAHvgVhIahy+q/Vj//OMQKcoTmQMETEYVGxtcce48Gow5+IZ5MVc4GOqTNBQzbf3ht6h0ie4WG7Wk4fJyjh2mFrAKAo2L6uq96YsxpRHTITcZdPCh7WtBajBZGHIDVKPu5Iu8VAOLNfFrZxCX8dzoi9RBfmqIIVJm+6SA+WntezPUA5JKXEyS3bA5p5hyJ20qJTW9KBNXs7G9M4+zTdh3YUk/h85jguIRkeMhyKT/8ZErIT6Z2dgCD8UzYHryWlx46q5bAqbHJVULGBSBcTpGjQG5tUAQ2Og3g2Azn5USeRFR6fmJOYrU3rKQ/mfl69w1TiCFtToDSmxTVlSYzhNh+N9Ze7msE1CrRjbXyebMd6XMZcpmWSh2Q0jdvya+6Xd56EGwNgR0N9Kd/2upGV6pIcoF3qqDKqR3SPdy1ohXbz76qRICuUcvTPkjXdJsaz62KbAOazuUe331Kj0vBpfp/h8oJla/xZ2tDp8PDRAgQ7VhCEpXyMj9uECKOjj6QlBpbUO87gpQHTOYcVv1LENgZ/K+mEKKLYcjGNtjpLR41s4c3n/IKXvcc1z9q3MD9rtgY8pvDAYmYYOqwhGkR+h3irfkVP/QqyauSviBnKSwq/CSuAN88OtxsrGnKKaeYN/le8fI20CnkukWQkhMmKE3JvXYnlxDKkqNtJ1zvvuF8QSU/gVmbCDH+XWFXfLIgUWOfoQVnRAvRQOebW3MpEyVuFdJQJuGhYiHNRs6e6MZZHoKi6ITSIx5frjdJenRlVtp3pKre5DEXQv54mu1RJG2kGBhEkcSv1DYBbDIdOHt+PAXSyW3AkktsO7HoZ8Gkfi6TAkFRPZFYpWc+Z4CVSx63YFf7lGufR3SHUXDF0XTg0TjEc6FGWXDJ2bx8U9grRCBrZ28R6ba+smkucxk+Nlt370DcfRb3nFoYw8NtiQiFF6tDLepHS3cmC4opd8CJnjCtV7nrrL8WszzBq5k8j41/HoNHvflSLNnfLVD5PEf6F12X05LAl8xE3Sk8qMILU4DthpLBp92UoLtCn3n18EjFdIqNFYbp/hNY2+O41vZ2bKkkh7SPF56XGE9bnUSVe74UmS7ak8LF4D6k36qWMv9YanBQbzP3TotkkpTngKa/skqIDgaRIWQL2S/8tM5y8g5V7+85mO5yDKiuL0wo+2Bg3UPmfpnw+2F2ul3JXJQTmV180tzMUdeNdO9rPVgD9RzsFrzwvP73rshjzYhXXsYjYXNb5GGh9B5znAzmYcmxXDL8nlx7KTcGrOH3oMdwxpSPrt/gbo133MiTQ7pL99om9lRpzhVvtA4jNOz5/BrSm5twiVb/JItlH2N8LNQ5P68MgwM9Q6zh3Z1+BuAsyikAfGUFzkmR9W6FI+Mz8vvzLLY8LLPXOP8Dlb0OQbV+IoBOUdMwfroI/ZfzxVVbwTvzPE7mvQ9vtrK4vLCPv/27Csd9nijC2D9P85fPWLWfjCjbxa1jds3YJYngMfIbwvqxsgPeIyMSi4W5S2IEvTFTH1uouyfQanI7DxRxTMBcn1xQe9IcB7/d+heEce4dNpzk3x7DJ8HJhug7bL1wBQUTx9SWhMIZA7pBT8OSxw/HrQ25DtRkS/AZ3UoiX+NcK4gyo9+R/2tAMLy1JnSYkIU4jQLlA+Cu/eYVn7P4PkcQIJfYm3ohJ3vle7Rlh932vuN/9Rjug514gon3dXZ9BYN1js6uK/oPUkhQ1Z3AtXX99WQjFX1PiioWD0uwPINKqVASum1fqMXvUu/cR71jOXYStnUxr8yBEK7M0M/euTvrSetyjOWnqnWlSRfV8YTLNsq4TtXxpxHCrjlgdYHzZfcoFfsWYg+nDUDbllwUpZYbnaLMYu8cJVT4FARJxpBhVJXdljoMX23+BQJx5lUiTE7UuYk+969nSxLZGwy4ggK2rrXxBki4b5SNgE9x/0FkQQPX0t1sYF5mTXPeYmqP/DbkVcCFhQewJQZIuMMHhkdtBbrjBqrqcviiuuQuwMor74eoJU/XvVawReScLbV7lC1Fq5uEY8wSA1CBy6+o5TsiYLJ6B7FVnHM9bxXbawmxetXMTPUhmwIZj6gC1u7AnYEc/BgD0U3g04YNU54AjW8YATBk8FnEEFDbgQGCXgijB5AAKx2dJuAS+cu3pDvUF0F48qqmmmlnJKKaMeLOHM1EagSaVEuxKsppkK22glmzCoNdRUS1DpfU0eGcsxu7FioA6jehT1tMFRXROVK6NJDYZYD9Ag2JDUJzALtCAa3QyUzZaYQm46j8leimS5S1G8HQZZ2tG6hO2bipVYq8g4wBgtY2P1WpqKhnuTnED1PSvUJj05ZiALNjRUgLgd0MV1xfIFWfD8L01TyARylUVQDjgmr6qvpTrAGtFaL2KnZQiicwJkBJDWs4k6s9p6mgFGRVWish10IEKlfFpZUKynZgWlSKyHui9fHehFi4aQQSKQGw3yZjUj6r5fBk2ADH19RRQYju4q7dbry0gF) format('woff2');}.wordmark{font-family:'NexaWord',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:30px;font-weight:700;font-style:italic;letter-spacing:-.5px;line-height:1;}
   .wordmark.sm{font-size:21px;}
   .tagline{font-size:13.5px;opacity:.85;margin-top:2px;}
@@ -1707,6 +1706,11 @@
   .trest .trest-eq{display:block;margin-top:6px;font-weight:700;}
   /* Garage — live budget sliders */
   .bsliders{margin-top:14px;display:flex;flex-direction:column;gap:13px;}
+  .bderiv{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:12px 13px;border-radius:16px;background:linear-gradient(165deg,rgba(234,245,253,.85),rgba(231,243,253,.5));border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);}
+  .bderiv .bderiv-k{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#6a747d;white-space:nowrap;}
+  .bderiv .bderiv-k .yi{color:#7b9bb5;}
+  .bderiv .bderiv-k .yi svg{width:15px;height:15px;}
+  .bderiv b{font-size:22px;font-weight:800;color:#288ed9;letter-spacing:-.5px;white-space:nowrap;}
   .bsl-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;font-weight:700;color:#6a747d;margin-bottom:2px;}
   .bsl-head span{display:inline-flex;align-items:center;gap:6px;}
   .bsl-head .yi{color:#7b9bb5;}
@@ -4956,6 +4960,11 @@ function paintProfileGate(){
 function commitProfile(v){
   packet.monthly = v.monthly;
   packet.down = v.down;
+  /* The term is part of the one up-front budget answer too — it
+     feeds purchasingPower(), so the derived car price (Garage
+     budget, Discover cap, Moe's Insights) uses the customer's
+     own term instead of the 60-month fallback. */
+  packet.term = v.term || '';
   var vt = $('vtype');
   if(vt){ vt.value = v.type; try { syncHomeCols(); } catch(e){} }
   document.querySelectorAll('#stockChips .chip').forEach(function(c){ c.setAttribute('aria-pressed', c.getAttribute('data-stock') === v.stock ? 'true' : 'false'); });
@@ -5031,7 +5040,15 @@ function guideSummaryHTML(){
   var b = [];
   if(guideAns.monthly) b.push('$' + guideAns.monthly + '/mo');
   if(guideAns.down) b.push('$' + guideAns.down + ' down');
+  if(guideAns.term) b.push(guideAns.term + ' mo');
   rows.push(['Budget', b.length ? b.join(' · ') : 'Not set']);
+  /* The derived car price — the budget answers turned into the
+     dollar amount of car that fits, by the same purchasing-power
+     math the Garage budget and the Discover cap read. Painted
+     after commitProfile, so it reads the just-saved terms. */
+  var gpp = null;
+  try { gpp = purchasingPower(); } catch(e){ gpp = null; }
+  if(gpp) rows.push(['Cars up to', '~' + money(Math.round(gpp.price / 100) * 100)]);
   var t = 'Any type', vt = $('vtype');
   if(vt) for(var i = 0; i < vt.options.length; i++){ if(vt.options[i].value === guideAns.type) t = vt.options[i].textContent; }
   rows.push(['Vehicle', t]);
@@ -5052,7 +5069,8 @@ function guideSummaryHTML(){
     } catch(e){}
   }
   rows.push(['Trade-in', trTxt]);
-  return rows.map(function(r){ return '<div><span>' + r[0] + '</span><b>' + esc(r[1]) + '</b></div>'; }).join('');
+  return rows.map(function(r){ return '<div><span>' + r[0] + '</span><b>' + esc(r[1]) + '</b></div>'; }).join('') +
+    (gpp ? '<p class="ins-assump" style="margin:8px 0 0;">Cars up to is worked out from your monthly target' + (gpp.down ? ', down payment' : '') + ' and term at 7% APR, before tax, title and fees' + (gpp.tradeEquity != null ? ', including your trade-in&rsquo;s rough equity' : '') + ' — it sets the budget Moe shops with.</p>' : '');
 }
 function renderGuide(){
   var body = $('moeGuideBody'), next = $('moeGuideNext'), back = $('moeGuideBack'), skip = $('moeGuideSkip');
@@ -5067,8 +5085,9 @@ function renderGuide(){
     next.innerHTML = 'Let&rsquo;s do it';
   }
   else if(guideStep === 1){
-    guideBubble('First &mdash; what&rsquo;s your monthly budget, and how much can you put down? Rough numbers are fine.');
-    body.innerHTML = '<div class="astep"><div class="arow"><div><label>Monthly target ($)</label><input id="gMonthly" inputmode="numeric" placeholder="e.g. 650" value="' + esc(guideAns.monthly) + '"></div><div><label>Down payment ($)</label><input id="gDown" inputmode="numeric" placeholder="e.g. 5000" value="' + esc(guideAns.down) + '"></div></div></div>';
+    guideBubble('First &mdash; what&rsquo;s your monthly budget, how much can you put down, and over how many months? Rough numbers are fine &mdash; I&rsquo;ll turn them into the car price that fits, and I won&rsquo;t ask again when you pick a car.');
+    body.innerHTML = '<div class="astep"><div class="arow"><div><label>Monthly target ($)</label><input id="gMonthly" inputmode="numeric" placeholder="e.g. 650" value="' + esc(guideAns.monthly) + '"></div><div><label>Down payment ($)</label><input id="gDown" inputmode="numeric" placeholder="e.g. 5000" value="' + esc(guideAns.down) + '"></div></div>' +
+      '<div class="arow" style="margin-top:2px;"><div><label>Term (months)</label><input id="gTerm" inputmode="numeric" placeholder="e.g. 60" value="' + esc(guideAns.term) + '"></div><div></div></div></div>';
     fill.style.width = '20%'; lab.textContent = 'Step 1 of 5';
     next.textContent = 'Next';
   }
@@ -5158,9 +5177,10 @@ function renderGuide(){
   }
 }
 function captureGuideBudget(){
-  var m = $('gMonthly'), d = $('gDown');
+  var m = $('gMonthly'), d = $('gDown'), t = $('gTerm');
   if(m) guideAns.monthly = m.value.trim();
   if(d) guideAns.down = d.value.trim();
+  if(t) guideAns.term = t.value.trim();
 }
 function captureGuideTrade(){
   if(!guideAns || !guideAns.tradeCar) return;
@@ -5178,6 +5198,7 @@ function finishGuide(){
   commitProfile({
     monthly: guideAns.monthly,
     down: guideAns.down,
+    term: guideAns.term,
     type: guideAns.type,
     stock: guideAns.stock,
     feats: guideAns.feats,
@@ -5194,7 +5215,7 @@ function openMoeGuide(){
      prefills the guide's trade question and details step. */
   var pTr = packet.trade;
   var hasTr = !!(pTr && (pTr.ymm || pTr.vin || pTr.miles || pTr.owe));
-  guideAns = { monthly: packet.monthly || '', down: packet.down || '', type: ($('vtype') || {}).value || '', stock: '', feats: {}, trade: hasTr ? 'yes' : 'no',
+  guideAns = { monthly: packet.monthly || '', down: packet.down || '', term: packet.term || '', type: ($('vtype') || {}).value || '', stock: '', feats: {}, trade: hasTr ? 'yes' : 'no',
     tradeCar: { ymm: hasTr ? (pTr.ymm || '') : '', vin: hasTr ? (pTr.vin || '') : '', miles: hasTr ? (pTr.miles || '') : '', owe: hasTr ? (pTr.owe || '') : '', condition: hasTr ? (pTr.condition || '') : '', cond: (pTr && pTr.cond) || 'good' } };
   var sc = document.querySelector('#stockChips .chip[aria-pressed="true"]');
   if(sc) guideAns.stock = sc.getAttribute('data-stock') || '';
@@ -5774,7 +5795,7 @@ function budgetCardHTML(){
       (p.down ? '<div class="bv" id="youDownBig">$' + esc(fmtMoneyStr(p.down)) + '</div>' : '<div class="bv unset" id="youDownBig">Not set</div>') + '</div>' +
     '</div>';
   /* Live sliders: dragging either one writes straight back into
-     the same packet fields Moe's Deal-terms step collects, and
+     the same packet fields the profile guide collects up front, and
      repaints the purchasing power, the "X cars fit" count, Moe's
      opinion and the budget thumbnails in place (onBudgetSlider) —
      the Edit-with-Moe flow and the sliders can never disagree.
@@ -5790,7 +5811,11 @@ function budgetCardHTML(){
     '<div class="bslider"><div class="bsl-head"><span>' + yi('coins') + 'Down Payment</span>' +
       (p.down ? '<b id="youDownVal">$' + esc(fmtMoneyStr(p.down)) + '</b>' : '<b class="unset" id="youDownVal">Not set — drag to set</b>') + '</div>' +
       '<input type="range" class="bsrange" id="youDownRange" min="0" max="50000" step="250" value="' + (isNaN(dNum) ? 0 : Math.max(0, Math.min(50000, dNum))) + '" aria-label="Down payment slider"></div>' +
-    '</div>';
+    '</div>' +
+    /* The budget, as a car price: derived from the monthly target,
+       down payment and term above — populated automatically, and
+       repainted in place when a slider moves (paintInsightsLive). */
+    '<div id="youDerived">' + derivedBudgetHTML() + '</div>';
   /* One compact row under the big numbers: financing type, term and
      trade-in first (the brief's row), then max price and credit when
      the customer actually set them. */
@@ -6036,6 +6061,20 @@ function garageBudgetPrice(){
      disagree by a rounding car. */
   return pp ? Math.floor(pp.price / 100) * 100 : null;
 }
+/* The derived car price, stated in the budget card itself: the
+   up-front monthly target + down payment + term turned into the
+   dollar amount of car that fits — the same number that caps
+   Discover and that Moe's Insights counts against. Empty when
+   no monthly target is on file. Repainted live by the Garage
+   sliders (paintInsightsLive), so changing monthly / down in
+   the Garage re-derives it the same way the guide did. */
+function derivedBudgetHTML(){
+  var pp = null;
+  try { pp = purchasingPower(); } catch(e){ pp = null; }
+  if(!pp) return '';
+  return '<div class="bderiv"><span class="bderiv-k">' + yi('car') + 'Cars up to</span><b>~' + money(Math.round(pp.price / 100) * 100) + '</b></div>' +
+    '<p class="ins-assump" style="margin:7px 0 0;">From $' + pp.monthly.toLocaleString('en-US') + '/mo' + (pp.down ? ' + $' + pp.down.toLocaleString('en-US') + ' down' : '') + ' over ' + pp.months + ' months at 7% APR, before tax, title and fees' + (pp.tradeEquity != null ? ' — includes your trade-in&rsquo;s rough equity' : '') + '. This is the cap on the cars Moe shows you.</p>';
+}
 /* The budget Home speaks about: the Garage budget first, then a
    Home-picked max, then a max out-the-door set with Moe. */
 function homeBudgetPrice(){
@@ -6156,19 +6195,22 @@ function tradeCardHTML(){
     '<button class="btn-grad" id="youTradeAddCard" type="button" style="width:100%;margin-top:13px;">Add your trade-in</button></div>';
 }
 /* ---- Garage — live budget sliders ----
-   A drag writes the same packet fields Moe's Deal-terms step
-   collects, persists, then repaints everything the budget
-   drives on this screen: the big numbers, the slider labels,
-   Moe's Insights (purchasing power + cars-fit count), the
-   opinion line and the budget thumbnails. The deck is rebuilt
-   through the unified budget (readSearch) so Discover, Home
-   and the Garage all read the same cars afterwards. */
+   A drag writes the same packet fields the profile guide
+   collects up front, persists, then repaints everything the
+   budget drives on this screen: the big numbers, the slider
+   labels, the derived "Cars up to" price, Moe's Insights
+   (purchasing power + cars-fit count), the opinion line and
+   the budget thumbnails. The deck is rebuilt through the
+   unified budget (readSearch) so Discover, Home and the
+   Garage all read the same cars afterwards. */
 function paintRange(el){
   if(!el) return;
   var pc = (+el.max > +el.min) ? ((+el.value - +el.min) / (+el.max - +el.min)) * 100 : 0;
   el.style.background = 'linear-gradient(90deg,#2f9be8 ' + pc + '%,#dcebf7 ' + pc + '%)';
 }
 function paintInsightsLive(){
+  var dv = $('youDerived');
+  if(dv){ try { dv.innerHTML = derivedBudgetHTML(); } catch(e){} }
   var ib = $('youInsBody');
   if(ib){ try { ib.innerHTML = insightsBodyHTML(); } catch(e){} }
   var fc = $('youFitCars');
@@ -6758,11 +6800,16 @@ var agentPickedCar = false;
    best out-the-door price, monthly payment, trade-in appraisal,
    availability. `askSteps` is the minimal list of wizard steps
    still needed before review/send: About you (1) only when name /
-   email aren't on file, Deal terms (2) only when no terms are set,
-   Trade-in (3) only when the trade-in question is still undecided.
-   Everything already on file is skipped — the flow goes straight
-   to the review/send screen. Sending, the reply breakdown and My
-   Deals tracking are the existing paths, unchanged. */
+   email aren't on file, Trade-in (3) only when the trade-in
+   question is still undecided. Deal terms are NEVER collected
+   here — the dealer's numbers are what they are, so monthly /
+   down / term are asked once, up front, in the profile guide,
+   and any terms already on file ride along in the dealer email
+   as background context only. With no terms on file the ask
+   still goes out, unblocked. Everything already on file is
+   skipped — the flow goes straight to the review/send screen.
+   Sending, the reply breakdown and My Deals tracking are the
+   existing paths, unchanged. */
 var agentLocked = false;
 var askSteps = [];
 function askedDealFor(carId){
@@ -6777,7 +6824,9 @@ function tradeDecided(){
 function askNeededSteps(){
   var steps = [];
   if(!(packet.contact.name && validEmail(packet.contact.email))) steps.push(1);
-  if(!(packet.structure || packet.monthly || packet.down || packet.term || packet.maxOtd)) steps.push(2);
+  /* No Deal terms step (2) — ever. Terms live in the profile,
+     collected up front by Moe's guide; they are context in the
+     dealer email, never a question at ask time. */
   if(!tradeDecided()) steps.push(3);
   return steps;
 }
@@ -7792,7 +7841,12 @@ function renderPacketReview(){
   var thumbs = packet.trade && packet.trade.photos.length ? '<div class="thumbs">' + packet.trade.photos.map(function(p){ return '<div class="thumb"><img src="' + p.data + '" alt="Trade-in photo"><span>' + esc(p.label) + '</span></div>'; }).join('') + '</div>' : '';
   $('stepBox').innerHTML = '<div class="packet">' + wizHead(4,'✦ Your deal packet') +
     '<div class="prow"><span class="pk">Buyer</span><span>' + esc(packet.contact.name || '—') + (packet.contact.email ? '<br>' + esc(packet.contact.email) : '') + (packet.contact.phone ? '<br>' + esc(packet.contact.phone) : '') + '</span><button class="edit" data-edit="1" type="button">Edit</button></div>' +
-    '<div class="prow"><span class="pk">Buying</span><span>' + esc(packet.structure||'Not specified') + (packet.monthly?' · $'+esc(packet.monthly)+'/mo target':'') + (packet.down?' · $'+esc(packet.down)+' down':'') + (packet.term?' · '+esc(packet.term)+' mo':'') + (packet.maxOtd?' · max $'+esc(packet.maxOtd)+' OTD':'') + '</span><button class="edit" data-edit="2" type="button">Edit</button></div>' +
+    /* In the locked ask flow the Buying row is context only — the
+       terms on file from the profile, shown so the buyer sees what
+       rides along in the email, with NO Edit path back into a Deal
+       terms form (Moe never re-asks terms at ask time). The classic
+       flow keeps its Edit. */
+    '<div class="prow"><span class="pk">Buying</span><span>' + esc(packet.structure||'Not specified') + (packet.monthly?' · $'+esc(packet.monthly)+'/mo target':'') + (packet.down?' · $'+esc(packet.down)+' down':'') + (packet.term?' · '+esc(packet.term)+' mo':'') + (packet.maxOtd?' · max $'+esc(packet.maxOtd)+' OTD':'') + '</span>' + (agentLocked ? '' : '<button class="edit" data-edit="2" type="button">Edit</button>') + '</div>' +
     '<div class="prow"><span class="pk">Car</span><span>' + (c ? esc(c.name)+' — '+esc(c.trim)+'<br>'+money(c.price)+' · '+esc(vinLabel(c))+'<br>'+esc(c.dealer.name) : '—') + '</span>' + (agentLocked ? '' : '<button class="edit" data-edit="0" type="button">Edit</button>') + '</div>' +
     '<div class="prow"><span class="pk">Trade-in</span><span>' + tradeRow + '</span><button class="edit" data-edit="3" type="button">Edit</button></div>' +
     (packet.notes ? '<div class="prow"><span class="pk">Notes</span><span>' + esc(packet.notes) + '</span><button class="edit" data-edit="3" type="button">Edit</button></div>' : '') +
@@ -7833,7 +7887,7 @@ function renderPacketReview(){
 function downloadPacket(){
   var c = packetCar();
   var photos = packet.trade && packet.trade.photos.length ? '<h3>Trade-in photos</h3>' + packet.trade.photos.map(function(p){ return '<figure style="display:inline-block;margin:6px;"><img src="' + p.data + '" style="width:220px;border-radius:8px;"><figcaption style="font-size:12px;">' + esc(p.label) + '</figcaption></figure>'; }).join('') : '';
-  var html = '<!doctype html><html><head><meta charset="utf-8"><title>Moetiv Deal Packet</title></head><body style="font-family:sans-serif;max-width:640px;margin:24px auto;padding:0 16px;"><h2>Moetiv Deal Packet</h2><p>' + esc(packetSummary()) + '</p><pre style="white-space:pre-wrap;background:#f4f8fb;padding:14px;border-radius:10px;">' + esc(packetText()) + '</pre>' + photos + '</body></html>';
+  var html = '<!doctype html><html><head><meta charset="utf-8"><title>Moetiv Deal Packet</title></head><body style="font-family:Inter,sans-serif;max-width:640px;margin:24px auto;padding:0 16px;"><h2>Moetiv Deal Packet</h2><p>' + esc(packetSummary()) + '</p><pre style="white-space:pre-wrap;background:#f4f8fb;padding:14px;border-radius:10px;">' + esc(packetText()) + '</pre>' + photos + '</body></html>';
   var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type:'text/html' })); a.download = 'moetiv-deal-packet.html'; a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
 }
 function sharePacket(){
