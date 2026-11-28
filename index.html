@@ -2377,6 +2377,66 @@
     #view-home .pickstile{min-height:54px;padding-block:9px;}
   }
 
+
+  /* Moetiv desktop Home — original Moe, floating hands, wider conversation.
+     Desktop-only rules intentionally leave mobile and all existing events intact. */
+  #view-home .desktop-home-copy{display:none;}
+  #view-home .talkcard-t .desktop-home-copy{display:none;}
+  @media (min-width:1024px){
+    #view-home .mobile-home-copy{display:none;}
+    #view-home .desktop-home-copy{display:inline;}
+    #view-home .talkcard-t .mobile-home-copy{display:none;}
+    #view-home .talkcard-t .desktop-home-copy{display:block;}
+    #view-home{--home-gutter:clamp(30px,5vw,88px);--home-hero-height:clamp(570px,46vw,740px);--home-moe-width:clamp(140px,16.4vw,250px);}
+    #view-home .home-bg{height:var(--home-hero-height);background:#fff;}
+    /* Original photo is a fallback; limit upscaling and align to the top so
+       the car sits lower. Keep the entire left side clear of image detail. */
+    #view-home .home-bg-photo{inset:36px 0 0;background-size:min(100%,1290px) auto;background-position:right top;background-repeat:no-repeat;}
+    #view-home .home-bg-shade{background:linear-gradient(180deg,#fff 0,rgba(255,255,255,0) 16%,transparent 65%,rgba(255,255,255,.78) 88%,#fff 100%),linear-gradient(90deg,#fff 0%,rgba(255,255,255,.97) 18%,rgba(255,255,255,.76) 32%,rgba(255,255,255,.22) 51%,transparent 65%);}
+    #view-home .home-inner{padding-top:clamp(24px,3.5vw,48px);padding-bottom:26px;}
+    #view-home h1.find{font-size:clamp(36px,4vw,65px);max-width:100%;margin:0;line-height:1.05;color:#101d2c;}
+    #view-home .sub{display:block;margin:10px 0 0;color:#4a6075;font-size:clamp(15px,1.45vw,22px);font-weight:500;text-shadow:none;}
+    #view-home .home-lower{grid-template-columns:var(--home-moe-width) minmax(0,1fr) minmax(0,1fr) minmax(0,35%);grid-template-rows:repeat(5,auto) 16px auto auto;gap:10px 0;padding-bottom:30px;}
+    #view-home .home-lower::before{grid-area:1 / 2 / 6 / 4;border:1px solid #dce8f3;border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(242,249,255,.94));box-shadow:0 15px 45px rgba(22,76,120,.13);}
+    #view-home .talkcard,#view-home .fcard-wrap,#view-home .cta,#view-home .trustline{grid-column:2 / 4;margin-inline:clamp(16px,1.7vw,26px);}
+    #view-home .talkcard{padding:20px 0 0;overflow:visible;}
+    #view-home .talkcard-head{gap:0;}
+    #view-home .talkcard-moe{position:absolute;display:block;left:calc(-1 * var(--home-moe-width) - 12px);top:0;width:var(--home-moe-width);height:calc(var(--home-moe-width) * .89);background-size:contain;filter:drop-shadow(0 8px 12px rgba(0,140,235,.20));pointer-events:none;}
+    #view-home .talkcard::before{content:"";position:absolute;left:calc(-1 * clamp(16px,1.7vw,26px) - 4px);top:-23px;width:clamp(58px,5vw,82px);height:clamp(44px,3.8vw,62px);background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20104%2078%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%22.8%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23b6f3ff%22%2F%3E%3Cstop%20offset%3D%22.32%22%20stop-color%3D%22%2326b8f6%22%2F%3E%3Cstop%20offset%3D%22.72%22%20stop-color%3D%22%230085d8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23004881%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22p%22%20cx%3D%22.25%22%20cy%3D%22.15%22%20r%3D%22.95%22%3E%3Cstop%20stop-color%3D%22%2381e5ff%22%2F%3E%3Cstop%20offset%3D%22.65%22%20stop-color%3D%22%230589db%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2303518c%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Cg%20stroke%3D%22%23138dd5%22%20stroke-width%3D%221.2%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20fill%3D%22url(%23p)%22%20d%3D%22M12%2032C9%2015%2024%206%2046%208L76%2011Q91%2012%2092%2026L87%2043%2020%2042Z%22%2F%3E%3Cpath%20fill%3D%22url(%23g)%22%20d%3D%22M14%2024Q24%2017%2031%2025L35%2045Q36%2057%2027%2060%2018%2062%2014%2053L8%2038Q5%2029%2014%2024Z%22%2F%3E%3Cpath%20fill%3D%22url(%23g)%22%20d%3D%22M31%2017Q40%2012%2046%2020L52%2048Q54%2060%2044%2064%2035%2067%2031%2056L25%2031Q22%2021%2031%2017Z%22%2F%3E%3Cpath%20fill%3D%22url(%23g)%22%20d%3D%22M48%2015Q58%2011%2064%2021L70%2046Q72%2057%2062%2061%2053%2064%2049%2053L43%2028Q40%2019%2048%2015Z%22%2F%3E%3Cpath%20fill%3D%22url(%23g)%22%20d%3D%22M66%2019Q76%2014%2082%2024L88%2042Q91%2052%2081%2055%2072%2058%2068%2049L61%2032Q58%2023%2066%2019Z%22%2F%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23b2f0ff%22%20stroke-opacity%3D%22.65%22%20stroke-width%3D%222%22%20d%3D%22M13%2029Q19%2023%2024%2027M31%2022Q37%2017%2042%2022M48%2021Q54%2016%2060%2023M66%2024Q72%2020%2077%2025%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center/contain no-repeat;filter:drop-shadow(0 3px 4px rgba(5,83,148,.22));pointer-events:none;z-index:3;}
+    #view-home .talkcard-moe::after{content:"";position:absolute;right:-9%;bottom:0;width:44%;height:36%;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20116%2088%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%22.2%22%20y1%3D%220%22%20x2%3D%22.65%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23b4f2ff%22%2F%3E%3Cstop%20offset%3D%22.32%22%20stop-color%3D%22%2327baf7%22%2F%3E%3Cstop%20offset%3D%22.68%22%20stop-color%3D%22%230789da%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23004c88%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M18%2067Q4%2057%2012%2041Q18%2030%2034%2028L94%2013Q108%2010%20110%2020Q112%2029%2099%2033L64%2043Q80%2043%2081%2052Q81%2060%2070%2062Q76%2068%2068%2074Q63%2080%2048%2076Q28%2080%2018%2067Z%22%20fill%3D%22url(%23g)%22%20stroke%3D%22%23149de5%22%20stroke-width%3D%221.4%22%2F%3E%3Cpath%20d%3D%22M32%2031Q43%2022%2049%2029Q55%2035%2047%2045L39%2053M55%2051L70%2047M53%2062L67%2060M20%2041Q17%2047%2020%2055%22%20fill%3D%22none%22%20stroke%3D%22%23005a9c%22%20stroke-opacity%3D%22.72%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M55%2028L96%2018Q103%2016%20105%2021%22%20fill%3D%22none%22%20stroke%3D%22%23d0f8ff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;pointer-events:none;}
+    #view-home .talkcard-t b{font-size:clamp(23px,2vw,31px);line-height:1.15;}
+    #view-home .talkcard-t span{font-size:clamp(13px,1.1vw,16px);color:#526577;line-height:1.4;}
+    #view-home .talk-pill{margin-top:14px;min-height:54px;background:#fff;border-color:#d1e2f0;}
+    #view-home .talk-input{font-size:16px;}
+    #view-home .fcol,#view-home .fcol + .fcol{min-height:60px;background:#fff;}
+    #view-home .cta{min-height:52px;border-radius:14px;}
+    #view-home .more-filters-link{grid-area:5 / 2;margin:0 0 12px clamp(16px,1.7vw,26px);}
+    #view-home .psetup-prompt{grid-area:5 / 3;margin:0 clamp(16px,1.7vw,26px) 12px 0;}
+    #view-home .quickrow{grid-area:7 / 1 / 8 / -1;gap:16px;}
+    #view-home .qtile{min-height:86px;border:1px solid #d6e4ef;border-radius:18px;box-shadow:0 5px 16px rgba(22,49,73,.065);}
+    #view-home .pickstile{grid-area:8 / 1 / 9 / 4;min-height:76px;}
+    #view-home .pickstile > .moe{display:inline-block;width:58px;height:52px;}
+    #view-home .meetmoe{grid-area:8 / 4 / 9 / -1;}
+    #view-home .style-head,#view-home .stylerow{display:none;}
+  }
+  @media (min-width:1024px) and (max-width:1199px){
+    #view-home{--home-moe-width:clamp(124px,14vw,170px);}
+    #view-home .home-lower{grid-template-columns:var(--home-moe-width) minmax(0,1fr) minmax(0,1fr) minmax(0,30%);}
+    #view-home .talkcard-moe{left:calc(-1 * var(--home-moe-width) - 6px);}
+    #view-home .talkcard::before{top:-18px;}
+    #view-home .talk-input{font-size:15px;}
+    #view-home .fcol,#view-home .fcol + .fcol{padding-inline:8px;gap:3px 5px;}
+  }
+  @media (min-width:1024px) and (max-height:760px){
+    #view-home .home-inner{padding-top:22px;padding-bottom:22px;}
+    #view-home .home-lower{gap:8px 0;}
+    #view-home .talkcard{padding-top:15px;}
+    #view-home .talk-pill{margin-top:10px;min-height:48px;}
+    #view-home .fcol,#view-home .fcol + .fcol{min-height:54px;}
+    #view-home .cta{min-height:48px;}
+    #view-home .qtile{min-height:72px;}
+  }
+
 </style>
 </head>
 <body>
@@ -2413,8 +2473,8 @@
         <button class="brand brand-btn" id="homeBrand" type="button" aria-label="Moetiv — back to Home"><span class="bars"><i></i><i></i></span><span class="wordmark">Moetiv</span></button>
         <button class="you-btn bell-btn" id="bellBtn" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.2 16.5v-5.2a5.8 5.8 0 0 1 11.6 0v5.2l1.3 2.8H4.9l1.3-2.8z"/><path d="M10 21.5a2.2 2.2 0 0 0 4 0"/></svg><span class="bell-dot" aria-hidden="true"></span></button>
       </div>
-      <h1 class="find">Let&rsquo;s find your<br> next car.</h1>
-      <p class="sub">Find the perfect match for your lifestyle.</p>
+      <h1 class="find"><span class="mobile-home-copy">Let&rsquo;s find your<br> next car.</span><span class="desktop-home-copy">Your next car starts here.</span></h1>
+      <p class="sub"><span class="mobile-home-copy">Find the perfect match for your lifestyle.</span><span class="desktop-home-copy">Meet Moe, your personal car-shopping companion.</span></p>
     </div>
     <div class="home-bg" aria-hidden="true">
       <div class="home-bg-photo"></div>
@@ -2476,7 +2536,7 @@
       <div class="talkcard" id="talkCard">
         <div class="talkcard-head">
           <span class="moe talkcard-moe" aria-hidden="true"></span>
-          <div class="talkcard-t"><b>Talk to Moe</b><span>Your personal AI car expert.</span></div>
+          <div class="talkcard-t"><b>Talk to Moe</b><span class="mobile-home-copy">Your personal AI car expert.</span><span class="desktop-home-copy">Tell Moe what you&rsquo;re looking for to find your matches.</span></div>
         </div>
         <div class="talk-note" id="talkNoVoice" hidden>Voice isn&rsquo;t available in this browser — type it instead.</div>
         <div class="talk-pill">
